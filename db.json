@@ -2,45 +2,52 @@
   "services": [
     {
       "id": 1,
-      "title": "تماس با ۱۳۶",
-      "description": "ارتباط مستقیم با سامانه ۱۳۶ برای گزارش و پیگیری",
+      "title": "ثبت شکایات فساد",
+      "description": "شکایات  و گزارش  های فساد ",
       "icon": "phone",
-      "link": "/contact-136"
+      "link": "/contact-136",
+      "img": "https://136.bazresi.ir/dargah/assets/logos/28d054cb-ab5b-42c9-092b-08dad160ceb1.png"
     },
     {
       "id": 2,
-      "title": "سامانه ملی انتشار و دسترسی آزاد به اطلاعات",
-      "description": "دسترسی آزاد به اطلاعات سازمانی",
+      "title": "گزارش فساد ناشناس",
+      "description": "گزارش فساد ناشناس",
       "icon": "database",
-      "link": "/open-data"
+      "link": "/open-data",
+      "img": "https://136.bazresi.ir/dargah/assets/logos/BB.png"
     },
     {
       "id": 3,
-      "title": "پایگاه اطلاع رسانی سازمان",
-      "description": "دریافت اخبار و اطلاعیه‌های سازمان",
+      "title": "پایگاه اطلاع‌رسانی",
+      "description": "پایگاه اطلاع رسانی سازمان",
       "icon": "info",
-      "link": "/news"
+      "link": "/news",
+      "img": "https://136.bazresi.ir/dargah/assets/logos/94d76394-8a25-4488-d8b1-08dada85fba1.png"
     },
     {
       "id": 4,
-      "title": "گزارش فساد ناشناس",
-      "description": "امکان ثبت گزارش فساد به صورت ناشناس",
+      "title": "دسترسی آزاد به اطلاعات",
+      "description": "سامانه ملی انتشار و دسترسی آژاد به اطلاعات ",
       "icon": "report",
-      "link": "/anonymous-report"
+      "link": "/anonymous-report",
+      "img": "https://136.bazresi.ir/dargah/assets/logos/7e3f8ef2-1120-4341-d8af-08dada85fba1.png"
     },
     {
       "id": 5,
-      "title": "شکایات و گزارش‌های فساد",
-      "description": "ثبت و پیگیری شکایات و گزارش‌های فساد",
+      "title": "تماس",
+      "description": " تماس با 136   ",
       "icon": "complaint",
-      "link": "/complaints"
-    },
-    {
+      "link": "/complaints",
+      "img": "https://136.bazresi.ir/dargah/assets/logos/DD.png"
+    },  {
       "id": 6,
-      "title": "پیگیری وضعیت گزارش فساد ناشناس",
-      "description": "بررسی وضعیت رسیدگی به گزارش‌های ثبت شده",
-      "icon": "search",
-      "link": "/track-anonymous-report"
+      "title": "پیگیری گزارش فساد",
+      "description": " پیگری وضعیت گزارش فساد ناشناس   ",
+      "icon": "complaint",
+      "link": "/complaints",
+      "img": "https://136.bazresi.ir/dargah/assets/logos/AA.png"
     }
+
+    
   ]
 }
