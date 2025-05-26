@@ -1,0 +1,46 @@
+{
+  "services": [
+    {
+      "id": 1,
+      "title": "تماس با ۱۳۶",
+      "description": "ارتباط مستقیم با سامانه ۱۳۶ برای گزارش و پیگیری",
+      "icon": "phone",
+      "link": "/contact-136"
+    },
+    {
+      "id": 2,
+      "title": "سامانه ملی انتشار و دسترسی آزاد به اطلاعات",
+      "description": "دسترسی آزاد به اطلاعات سازمانی",
+      "icon": "database",
+      "link": "/open-data"
+    },
+    {
+      "id": 3,
+      "title": "پایگاه اطلاع رسانی سازمان",
+      "description": "دریافت اخبار و اطلاعیه‌های سازمان",
+      "icon": "info",
+      "link": "/news"
+    },
+    {
+      "id": 4,
+      "title": "گزارش فساد ناشناس",
+      "description": "امکان ثبت گزارش فساد به صورت ناشناس",
+      "icon": "report",
+      "link": "/anonymous-report"
+    },
+    {
+      "id": 5,
+      "title": "شکایات و گزارش‌های فساد",
+      "description": "ثبت و پیگیری شکایات و گزارش‌های فساد",
+      "icon": "complaint",
+      "link": "/complaints"
+    },
+    {
+      "id": 6,
+      "title": "پیگیری وضعیت گزارش فساد ناشناس",
+      "description": "بررسی وضعیت رسیدگی به گزارش‌های ثبت شده",
+      "icon": "search",
+      "link": "/track-anonymous-report"
+    }
+  ]
+}

@@ -1,10 +1,6 @@
 @import "tailwindcss";
 @import "../public/assets/fonts/fontFace.css";
 
-
-
-     
-
 :root {
   --theme-color-1: #00375c;
   --theme-color-2: #184f90;
@@ -14,12 +10,12 @@
   --theme-color-4: #2c4d6e;
   --theme-color-5: #245794;
   --theme-color-6: #6a7b8d;
-  --theme-color-1-10: rgba(0, 55, 92, .1);
-  --theme-color-2-10: rgba(24, 79, 144, .1);
-  --theme-color-3-10: rgba(138, 159, 180, .1);
-  --theme-color-4-10: rgba(44, 77, 110, .1);
-  --theme-color-5-10: rgba(36, 87, 148, .1);
-  --theme-color-6-10: rgba(106, 123, 141, .1);
+  --theme-color-1-10: rgba(0, 55, 92, 0.1);
+  --theme-color-2-10: rgba(24, 79, 144, 0.1);
+  --theme-color-3-10: rgba(138, 159, 180, 0.1);
+  --theme-color-4-10: rgba(44, 77, 110, 0.1);
+  --theme-color-5-10: rgba(36, 87, 148, 0.1);
+  --theme-color-6-10: rgba(106, 123, 141, 0.1);
   --primary-color: #3a3a3a;
   --background-color: #f2f2f2;
   --secondary-color: #8f8f8f;
@@ -56,6 +52,9 @@
   --breakpoint-lg: 992px;
   --breakpoint-xl: 1200px;
   --breakpoint-xxl: 1440px;
-  --font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
 }

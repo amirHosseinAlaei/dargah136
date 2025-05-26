@@ -5,7 +5,6 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ConfigProvider } from "antd";
 
 const queryClient = new QueryClient();
-
 function App() {
   return (
     <ConfigProvider
@@ -20,7 +19,7 @@ function App() {
         },
       }}
     >
-      
+
       <QueryClientProvider client={queryClient}>
         <>
           <Toaster />
