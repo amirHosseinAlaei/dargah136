@@ -1,0 +1,61 @@
+@import "tailwindcss";
+@import "../public/assets/fonts/fontFace.css";
+
+
+
+     
+
+:root {
+  --theme-color-1: #00375c;
+  --theme-color-2: #184f90;
+  --theme-color-1-rgb: 0, 54, 90;
+  --theme-color-2-rgb: 24, 79, 144;
+  --theme-color-3: #8a9fb4;
+  --theme-color-4: #2c4d6e;
+  --theme-color-5: #245794;
+  --theme-color-6: #6a7b8d;
+  --theme-color-1-10: rgba(0, 55, 92, .1);
+  --theme-color-2-10: rgba(24, 79, 144, .1);
+  --theme-color-3-10: rgba(138, 159, 180, .1);
+  --theme-color-4-10: rgba(44, 77, 110, .1);
+  --theme-color-5-10: rgba(36, 87, 148, .1);
+  --theme-color-6-10: rgba(106, 123, 141, .1);
+  --primary-color: #3a3a3a;
+  --background-color: #f2f2f2;
+  --secondary-color: #8f8f8f;
+  --foreground-color: #fff;
+  --separator-color: #d7d7d7;
+}
+
+:root {
+  --blue: #007bff;
+  --indigo: #6610f2;
+  --purple: #6f42c1;
+  --pink: #e83e8c;
+  --red: #dc3545;
+  --orange: #fd7e14;
+  --yellow: #ffc107;
+  --green: #28a745;
+  --teal: #20c997;
+  --cyan: #17a2b8;
+  --white: #fff;
+  --gray: #6c757d;
+  --gray-dark: #343a40;
+  --primary: #007bff;
+  --secondary: #6c757d;
+  --success: #28a745;
+  --info: #17a2b8;
+  --warning: #ffc107;
+  --danger: #dc3545;
+  --light: #f8f9fa;
+  --dark: #343a40;
+  --breakpoint-xxs: 0;
+  --breakpoint-xs: 420px;
+  --breakpoint-sm: 576px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 992px;
+  --breakpoint-xl: 1200px;
+  --breakpoint-xxl: 1440px;
+  --font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
