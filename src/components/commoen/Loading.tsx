@@ -1,7 +1,7 @@
 
 function Loading() {
   return (
-    <div>Loading</div>
+    <div>قسمت لودینگ بعدا باید درست بشه </div>
   )
 }
 

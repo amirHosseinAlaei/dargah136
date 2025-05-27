@@ -15,7 +15,7 @@ define: {
 
 },
 server: {
-host: "test.tehrantc.com",
+host: "test.bazresi.ir",
 
 },
 resolve: {

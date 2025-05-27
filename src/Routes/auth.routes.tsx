@@ -9,11 +9,20 @@ const Suspenswrapper: React.FC<{ children: React.ReactNode }> = ({
 };
 
 const LoginRoutes = {
-  path: "/auth",
+  path: "/user2",
   element: <LoginLayout />,
   children: [
     {
-      path: "/auth/login",
+      path: "/user2/login",
+      element: (
+        <Suspenswrapper>
+          <Login />
+        </Suspenswrapper>
+      ),
+    },
+
+      {
+      path: "/user2/register",
       element: (
         <Suspenswrapper>
           <Login />
