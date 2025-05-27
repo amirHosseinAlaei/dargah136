@@ -10,10 +10,6 @@ function App() {
     <ConfigProvider
       theme={{
         token: {
-          colorPrimary: "var(--theme-color-1)",
-          colorSuccess: "var(--green)",
-          colorWarning: "var(--orange)",
-          colorError: "var(--red)",
           colorInfo: "var(--blue)",
           fontFamily: "IRANYekanXFaNum"
         },

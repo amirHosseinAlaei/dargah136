@@ -18,17 +18,17 @@ export const CreateCaptcha = async () => {
   };
 };
 
-// export const LoginExternal = async ({ nationalCode, password, captcha, captchaKey }) => {
-//   const { data } = await axios.post(
-//     'https://api.bazresi.ir/api/v1/Authenticate/LoginExternal',
-//     {
-//       userName: nationalCode,
-//       password,
-//       dntCaptchaText: captcha,
-//       dntCaptchaId: captchaKey,
-//       dntCaptchaToken: captchaKey,
-//     }
-//   );
+export const LoginExternal = async ({ nationalCode, password, captcha, captchaKey }) => {
+  const { data } = await axios.post(
+    'https://api.bazresi.ir/api/v1/Authenticate/LoginExternal',
+    {
+      userName: nationalCode,
+      password,
+      dntCaptchaText: captcha,
+      dntCaptchaId: captchaKey,
+      dntCaptchaToken: captchaKey,
+    }
+  );
 
-//   return data;
-// };
+  return data;
+};
