@@ -126,7 +126,7 @@ const DashboardLayout = () => {
                   <div className="absolute inset-0 flex flex-col justify-center items-center p-14 pointer-events-none">
                     <div className="-mt-8">
                       <SvgLanding />
-                      <h2 className="text-white text-center font-bold">www.136.ir</h2>
+                      <h2 className="text-white text-center !mt-5 font-bold">www.136.ir</h2>
                     </div>
                   </div>
                   <ShowDate />

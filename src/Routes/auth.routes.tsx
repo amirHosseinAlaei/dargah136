@@ -1,6 +1,7 @@
 import { lazy, Suspense } from "react";
 import LoginLayout from "../leyout/AuthLayout";
 import Loading from "../components/commoen/Loading";
+import Register from "../pages/authentication/Register";
 const Login = lazy(() => import("../pages/authentication/Login"));
 const Suspenswrapper: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -25,7 +26,7 @@ const LoginRoutes = {
       path: "/user2/register",
       element: (
         <Suspenswrapper>
-          <Login />
+          <Register/>
         </Suspenswrapper>
       ),
     },
