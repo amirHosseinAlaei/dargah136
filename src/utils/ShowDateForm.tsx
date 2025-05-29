@@ -5,17 +5,23 @@ const weekDays = [
   "چهارشنبه",
   "پنج‌شنبه",
   "جمعه",
-  "شنبه"
+  "شنبه",
 ];
 
 // تبدیل تاریخ میلادی به شمسی (تقویم جلالی)
-function toJalali(gy, gm, gd) {
+export function toJalali(gy, gm, gd) {
   let g_d_m = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
-  let jy = (gy <= 1600) ? 0 : 979;
-  gy -= (gy <= 1600) ? 621 : 1600;
-  let gy2 = (gm > 2) ? (gy + 1) : gy;
-  let days = (365 * gy) + Math.floor((gy2 + 3) / 4) - Math.floor((gy2 + 99) / 100) +
-    Math.floor((gy2 + 399) / 400) - 80 + gd + g_d_m[gm - 1];
+  let jy = gy <= 1600 ? 0 : 979;
+  gy -= gy <= 1600 ? 621 : 1600;
+  let gy2 = gm > 2 ? gy + 1 : gy;
+  let days =
+    365 * gy +
+    Math.floor((gy2 + 3) / 4) -
+    Math.floor((gy2 + 99) / 100) +
+    Math.floor((gy2 + 399) / 400) -
+    80 +
+    gd +
+    g_d_m[gm - 1];
   jy += 33 * Math.floor(days / 12053);
   days %= 12053;
   jy += 4 * Math.floor(days / 1461);
