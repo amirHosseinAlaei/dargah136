@@ -1,31 +1,23 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Button } from "antd";
 import { useNavigate } from "react-router-dom";
 import { Icon } from "@iconify/react";
 import { staticCardApi } from "../../service/staticApi";
 
-// هوک بهبود یافته برای تشخیص موبایل
+// هوک تشخیص موبایل
 function useIsMobile() {
-  const [isMobile, setIsMobile] = useState(() => {
-    // بررسی اولیه در سمت کلاینت
-    if (typeof window === "undefined") return false;
-    return window.innerWidth < 640;
-  });
-
+  const [isMobile, setIsMobile] = useState(
+    typeof window === "undefined" ? false : window.innerWidth < 640
+  );
   useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 640);
-    };
-
+    const handleResize = () => setIsMobile(window.innerWidth < 640);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
   return isMobile;
 }
 
-// تایپ‌های TypeScript برای بهتر شدن کد
+// تایپ کارت
 interface CardItem {
   id: string | number;
   title: string;
@@ -34,7 +26,7 @@ interface CardItem {
   link: string;
 }
 
-// کامپوننت جداگانه برای کارت‌ها
+// کارت
 const CardItem: React.FC<{
   item: CardItem;
   index?: number;
@@ -43,14 +35,14 @@ const CardItem: React.FC<{
 }> = React.memo(({ item, index, isListView, onClick }) => {
   if (isListView) {
     return (
-      <Button
+      <button
         onClick={onClick}
-        type="text"
-        className="w-full flex flex-row items-start border-none text-black rounded-lg hover:shadow-md transition-all duration-300 p-3 bg-white hover:bg-gray-50 min-h-[70px]"
+        className="w-full flex flex-row items-start rounded-lg transition-colors duration-150 p-3 hover:bg-gray-50 focus:bg-gray-100 outline-none"
         aria-label={`رفتن به ${item.title}`}
+        type="button"
       >
         {typeof index === "number" && (
-          <span className="text-gray-500 font-bold w-8 text-center text-sm flex-shrink-0 mt-1">
+          <span className="text-gray-400 font-bold w-8 text-center text-sm flex-shrink-0 mt-1">
             {index + 1}
           </span>
         )}
@@ -66,20 +58,20 @@ const CardItem: React.FC<{
           <div className="text-sm font-medium text-gray-800 mb-1 break-words whitespace-normal leading-relaxed">
             {item.title}
           </div>
-          <div className="text-xs text-gray-600 break-words whitespace-normal leading-relaxed">
+          <div className="text-xs text-gray-500 break-words whitespace-normal leading-relaxed">
             {item.description}
           </div>
         </div>
-      </Button>
+      </button>
     );
   }
 
   return (
-    <Button
+    <button
       onClick={onClick}
-      type="text"
-      className="!p-4 w-full h-auto flex flex-col items-center justify-start border-none text-black rounded-lg hover:shadow-lg transition-all duration-300 bg-white hover:bg-gray-50"
-      style={{ minHeight: "180px" }}
+      className="p-4 w-full h-auto flex flex-col items-center justify-start rounded-lg transition-colors duration-150 hover:bg-gray-50 focus:bg-gray-100 outline-none"
+      type="button"
+      style={{ minHeight: 180 }}
       aria-label={`رفتن به ${item.title}`}
     >
       <div className="w-16 h-16 flex items-center justify-center mb-3 flex-shrink-0">
@@ -94,14 +86,13 @@ const CardItem: React.FC<{
         <h3 className="text-base sm:text-lg font-semibold break-words whitespace-normal leading-tight w-full">
           {item.title}
         </h3>
-        <p className="text-xs sm:text-sm text-gray-600 break-words whitespace-normal leading-relaxed w-full">
+        <p className="text-xs sm:text-sm text-gray-500 break-words whitespace-normal leading-relaxed w-full">
           {item.description}
         </p>
       </div>
-    </Button>
+    </button>
   );
 });
-
 CardItem.displayName = "CardItem";
 
 // کامپوننت اصلی
@@ -112,15 +103,13 @@ function LandingContent() {
   const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ["static-cards"],
     queryFn: staticCardApi,
-    staleTime: 5 * 60 * 1000, // 5 دقیقه
+    staleTime: 5 * 60 * 1000,
     retry: 2,
   });
 
-  // محاسبه تعداد حالت‌های نمایش
   const modeCount = useMemo(() => (isMobile ? 2 : 3), [isMobile]);
   const [viewMode, setViewMode] = useState(0);
 
-  // آیکون‌های مربوط به حالت‌های مختلف
   const modeIcons = useMemo(() => {
     return isMobile
       ? ["material-symbols:grid-view-outline", "material-symbols:list"]
@@ -131,12 +120,10 @@ function LandingContent() {
         ];
   }, [isMobile]);
 
-  // تغییر حالت نمایش
   const handleChangeMode = useCallback(() => {
     setViewMode((prev) => (prev + 1) % modeCount);
   }, [modeCount]);
 
-  // ناوبری به صفحه مورد نظر
   const handleNavigate = useCallback(
     (link: string) => {
       navigate(link);
@@ -144,7 +131,6 @@ function LandingContent() {
     [navigate]
   );
 
-  // محاسبه کلاس CSS برای grid
   const gridClass = useMemo(() => {
     const isListView =
       (isMobile && viewMode === 1) || (!isMobile && viewMode === 2);
@@ -152,27 +138,21 @@ function LandingContent() {
     if (isListView) {
       return "flex flex-col gap-1";
     }
-
     if (isMobile) {
       return "grid grid-cols-1 gap-4";
     }
-
-    // حالت‌های مختلف برای دسکتاپ
     if (viewMode === 0) {
-      return "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 items-start"; // 4 ستون
+      return "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 items-start";
     } else if (viewMode === 1) {
-      return "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 items-start"; // 3 ستون
+      return "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 items-start";
     }
-
-    return "grid grid-cols-1 sm:grid-cols-2 gap-4 items-start"; // 2 ستون (fallback)
+    return "grid grid-cols-1 sm:grid-cols-2 gap-4 items-start";
   }, [isMobile, viewMode]);
 
-  // بررسی حالت لیست
   const isListView = useMemo(() => {
     return (isMobile && viewMode === 1) || (!isMobile && viewMode === 2);
   }, [isMobile, viewMode]);
 
-  // حالت‌های مختلف UI
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
@@ -187,7 +167,7 @@ function LandingContent() {
   if (isError) {
     return (
       <div className="text-center py-12">
-        <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md mx-auto">
+        <div className="p-6 max-w-md mx-auto">
           <Icon
             icon="mdi:alert-circle"
             className="text-red-500 text-4xl mx-auto mb-4"
@@ -198,13 +178,13 @@ function LandingContent() {
           <p className="text-red-600 mb-4">
             {error?.message || "مشکلی در دریافت اطلاعات به وجود آمده"}
           </p>
-          <Button
+          <button
             onClick={() => refetch()}
-            type="primary"
-            className="!bg-red-600 hover:!bg-red-700"
+            className="px-4 py-2 rounded-lg bg-red-600 text-white text-sm hover:bg-red-700 transition"
+            type="button"
           >
             تلاش مجدد
-          </Button>
+          </button>
         </div>
       </div>
     );
@@ -227,35 +207,25 @@ function LandingContent() {
   return (
     <div className="w-full min-h-screen px-2 sm:px-4 md:px-6 py-4">
       <div className="max-w-7xl mx-auto">
-        {/* هدر با دکمه تغییر حالت */}
+        {/* هدر */}
         <div className="mb-6 flex items-center justify-between">
           <h1 className="text-xl sm:text-2xl font-bold text-gray-800">
             خدمات ({items.length})
           </h1>
-
-          {/* دکمه بهبود یافته با گرادینت و طراحی مینیمال */}
           <button
             onClick={handleChangeMode}
             aria-label="تغییر حالت نمایش"
-            className="group relative overflow-hidden rounded-xl p-3 bg-gradient-to-br from-slate-100 via-white to-slate-50 hover:from-slate-200 hover:via-slate-100 hover:to-slate-100 border border-slate-200/60 hover:border-slate-300/80 shadow-sm hover:shadow-md transition-all duration-300 ease-out active:scale-95"
+            className="rounded-xl p-3 bg-white shadow transition 
+                       hover:bg-gray-100 hover:shadow-md cursor-pointer"
+            type="button"
           >
-            {/* گرادینت پس‌زمینه انیمیشن‌دار */}
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-50/30 via-indigo-50/20 to-purple-50/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-
-            {/* آیکون */}
-            <div className="relative z-10 flex items-center justify-center">
-              <Icon
-                icon={modeIcons[viewMode]}
-                className="text-xl text-slate-600 group-hover:text-slate-700 transition-colors duration-200 group-hover:scale-110 transform transition-transform duration-200"
-              />
-            </div>
-
-            {/* افکت نور */}
-            <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <Icon
+              icon={modeIcons[viewMode]}
+              className="text-xl text-slate-600"
+            />
           </button>
         </div>
-
-        {/* محتوای اصلی */}
+        {/* لیست کارت‌ها */}
         <div className={gridClass}>
           {items.map((item, index) => (
             <React.Fragment key={item.id}>
@@ -265,9 +235,8 @@ function LandingContent() {
                 isListView={isListView}
                 onClick={() => handleNavigate(item.link)}
               />
-              {/* خط جداکننده برای حالت لیست */}
               {isListView && index !== items.length - 1 && (
-                <div className="border-b border-dashed border-gray-300 mx-4" />
+                <div className="border-b border-dashed border-gray-200 mx-4" />
               )}
             </React.Fragment>
           ))}

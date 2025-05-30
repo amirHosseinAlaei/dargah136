@@ -1,31 +1,15 @@
 @import "../public/assets/fonts/fontFace.css";
 @import "tailwindcss";
 
-/* انیمیشن نقطه‌های متحرک */
-@keyframes floatParticles {
-  0% {
-    transform: translateX(0px);
-  }
-  100% {
-    transform: translateX(-300px);
-  }
-}
 
-/* کانتینر نقطه‌ها */
-.particles-container {
-  background-image: radial-gradient(2px 2px at 20px 30px, #ffffff, transparent),
-    radial-gradient(2px 2px at 40px 70px, #ffffff, transparent),
-    radial-gradient(1px 1px at 90px 40px, #ffffff, transparent),
-    radial-gradient(1px 1px at 130px 80px, #ffffff, transparent),
-    radial-gradient(2px 2px at 160px 30px, #ffffff, transparent),
-    radial-gradient(1px 1px at 200px 50px, #ffffff, transparent),
-    radial-gradient(2px 2px at 240px 20px, #ffffff, transparent),
-    radial-gradient(1px 1px at 280px 90px, #ffffff, transparent);
-  background-repeat: repeat;
-  background-size: 300px 120px;
-  animation: floatParticles 60s linear infinite;
-}
+
+
+
+
+
 
 * {
   font-family: "IRANYekanXFaNum";
 }
+
+

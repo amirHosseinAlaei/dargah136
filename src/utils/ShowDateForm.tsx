@@ -38,7 +38,7 @@ export function toJalali(gy, gm, gd) {
     jm = 7 + Math.floor((days - 186) / 30);
     jd = 1 + ((days - 186) % 30);
   }
-  return [jy, jm, jd]; // اینجا دیگر +1 نداریم
+  return [jy, jm, jd];
 }
 
 export function getPersianDateString(date = new Date()) {
@@ -47,5 +47,10 @@ export function getPersianDateString(date = new Date()) {
   const gd = date.getDate();
   const weekDay = weekDays[date.getDay()];
   const [jy, jm, jd] = toJalali(gy, gm, gd);
-  return `${weekDay} ${jy}/${jm}/${jd}`;
+
+  // فرمت با zero padding برای زیبایی بیشتر
+  const formattedMonth = String(jm).padStart(2, "0");
+  const formattedDay = String(jd).padStart(2, "0");
+
+  return `${weekDay} ${jy}/${formattedMonth}/${formattedDay}`;
 }
