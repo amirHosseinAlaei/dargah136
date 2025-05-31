@@ -3,9 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { Icon } from "@iconify/react";
 import { staticCardApi } from "../../service/staticApi";
-import { showCaptcha } from "../../service/Authenticate";
 
-// هوک تشخیص موبایل
 function useIsMobile() {
   const [isMobile, setIsMobile] = useState(
     typeof window === "undefined" ? false : window.innerWidth < 640
@@ -18,8 +16,7 @@ function useIsMobile() {
   return isMobile;
 }
 
-// تایپ کارت
-interface CardItem {
+interface CardItemType {
   id: string | number;
   title: string;
   description: string;
@@ -27,23 +24,23 @@ interface CardItem {
   link: string;
 }
 
-// کارت
 const CardItem: React.FC<{
-  item: CardItem;
+  item: CardItemType;
   index?: number;
   isListView: boolean;
   onClick: () => void;
-}> = React.memo(({ item, index, isListView, onClick }) => {
+  className?: string;
+}> = React.memo(({ item, index, isListView, onClick, className }) => {
   if (isListView) {
     return (
       <button
         onClick={onClick}
-        className="w-full flex flex-row items-start rounded-lg transition-colors duration-150 p-3 hover:bg-gray-50 focus:bg-gray-100 outline-none"
+        className={`w-full flex flex-row items-start rounded-lg transition-colors duration-150 p-3 hover:bg-gray-50 focus:bg-gray-100 outline-none ${className || ""}`}
         aria-label={`رفتن به ${item.title}`}
         type="button"
       >
         {typeof index === "number" && (
-          <span className="text-gray-00 font-bold w-8 text-center text-sm flex-shrink-0 mt-1">
+          <span className="text-gray-900 font-bold w-8 text-center text-sm flex-shrink-0 mt-1">
             {index + 1}
           </span>
         )}
@@ -70,7 +67,7 @@ const CardItem: React.FC<{
   return (
     <button
       onClick={onClick}
-      className="p-4 w-full h-auto flex flex-col items-center justify-start rounded-lg transition-colors duration-150 hover:bg-gray-50 focus:bg-gray-100 outline-none"
+      className={`p-4 w-full h-auto flex flex-col items-center justify-start rounded-lg transition-colors duration-150 hover:bg-gray-50 focus:bg-gray-100 outline-none ${className || ""}`}
       type="button"
       style={{ minHeight: 180 }}
       aria-label={`رفتن به ${item.title}`}
@@ -96,7 +93,6 @@ const CardItem: React.FC<{
 });
 CardItem.displayName = "CardItem";
 
-// کامپوننت اصلی
 function LandingContent() {
   const navigate = useNavigate();
   const isMobile = useIsMobile();
@@ -126,8 +122,14 @@ function LandingContent() {
   }, [modeCount]);
 
   const handleNavigate = useCallback(
-    (link: string) => {
-      navigate(link);
+    (link: string, id?: string | number) => {
+      if (id === 5) {
+        window.location.href = "tel:136";
+      } else if (id === 2) {
+        navigate("/dargah/dashboard2/report"); // اینجا لینک جدید رو بزار
+      } else {
+        navigate(link);
+      }
     },
     [navigate]
   );
@@ -191,7 +193,7 @@ function LandingContent() {
     );
   }
 
-  const items: CardItem[] = data || [];
+  const items: CardItemType[] = data || [];
 
   if (!items.length) {
     return (
@@ -205,12 +207,6 @@ function LandingContent() {
     );
   }
 
-// const {data} = useQuery({
-//   queryFn:showCaptcha
-
-// })
-// console.log(data)
-
   return (
     <div className="w-full min-h-screen px-2 sm:px-4 md:px-6 py-4">
       <div className="max-w-7xl mx-auto">
@@ -222,31 +218,34 @@ function LandingContent() {
           <button
             onClick={handleChangeMode}
             aria-label="تغییر حالت نمایش"
-            className="rounded-xl p-3 bg-white shadow transition 
-                       hover:bg-gray-100 hover:shadow-md cursor-pointer"
+            className="rounded-xl p-3 bg-white shadow transition hover:bg-gray-100 hover:shadow-md cursor-pointer"
             type="button"
           >
-            <Icon
-              icon={modeIcons[viewMode]}
-              className="text-xl text-slate-600"
-            />
+            <Icon icon={modeIcons[viewMode]} className="text-xl text-slate-600" />
           </button>
         </div>
+
         {/* لیست کارت‌ها */}
         <div className={gridClass}>
-          {items.map((item, index) => (
-            <React.Fragment key={item.id}>
-              <CardItem
-                item={item}
-                index={isListView ? index : undefined}
-                isListView={isListView}
-                onClick={() => handleNavigate(item.link)}
-              />
-              {isListView && index !== items.length - 1 && (
-                <div className="border-b border-dashed border-gray-200 mx-4" />
-              )}
-            </React.Fragment>
-          ))}
+          {items.map((item, index) => {
+            // کارت با id=5 فقط تو موبایل نمایش داده بشه، lg به بعد مخفی
+            const specialClass = item.id === 5 ? "block lg:hidden" : "";
+
+            return (
+              <React.Fragment key={item.id}>
+                <CardItem
+                  item={item}
+                  index={isListView ? index : undefined}
+                  isListView={isListView}
+                  className={specialClass}
+                  onClick={() => handleNavigate(item.link, item.id)}
+                />
+                {isListView && index !== items.length - 1 && (
+                  <div className="border-b border-dashed border-gray-200 mx-4" />
+                )}
+              </React.Fragment>
+            );
+          })}
         </div>
       </div>
     </div>

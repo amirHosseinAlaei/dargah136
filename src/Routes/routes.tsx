@@ -1,9 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import LoginRoutes from "./auth.routes";
 import landingRoutes from "./Landing.routes";
-const routes= createBrowserRouter ([
-landingRoutes , LoginRoutes 
-])
+import ReportRoutes from "./report.route";
+const routes = createBrowserRouter([landingRoutes, LoginRoutes  , ReportRoutes ]);
 
-
-export default routes
+export default routes;

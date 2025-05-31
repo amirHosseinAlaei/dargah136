@@ -9,7 +9,7 @@ const Suspenswrapper: React.FC<{ children: React.ReactNode }> = ({
   return <Suspense fallback={<Loading />}>{children}</Suspense>;
 };
 
-const landingRoutes = {
+const ErorRoutes = {
   path: "/eror",
   element: <ErrorLayout />,
 
@@ -24,4 +24,4 @@ const landingRoutes = {
     },
   ],
 };
-export default landingRoutes;
+export default ErorRoutes;

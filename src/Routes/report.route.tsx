@@ -1,31 +1,28 @@
 import { lazy, Suspense } from "react";
-import { Navigate } from "react-router-dom"; // ✅ اضافه کن
 import LandingLayout from "../leyout/LandingLeyout";
 import Loading from "../components/commoen/Loading";
+import ReportIndex from "../pages/Report/ReportIndex";
 
 const LandingContent = lazy(() => import("../pages/landing/LandingContent"));
-
-const Suspenswrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const Suspenswrapper: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   return <Suspense fallback={<Loading />}>{children}</Suspense>;
 };
 
-const landingRoutes = {
+const ReportRoutes = {
   path: "/",
   element: <LandingLayout />,
+
   children: [
     {
-      index: true, // ✅ وقتی آدرس `/` زده بشه
-      element: <Navigate to="/dargah/dashboard2/" replace /> // ریدایرکت کن
-    },
-    {
-      path: "dargah/dashboard2/",
+      path: "/dargah/dashboard2/report",
       element: (
         <Suspenswrapper>
-          <LandingContent />
+          <ReportIndex />
         </Suspenswrapper>
       ),
     },
   ],
 };
-
-export default landingRoutes;
+export default ReportRoutes;
