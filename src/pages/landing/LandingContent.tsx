@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { Icon } from "@iconify/react";
 import { staticCardApi } from "../../service/staticApi";
+import { showCaptcha } from "../../service/Authenticate";
 
 // هوک تشخیص موبایل
 function useIsMobile() {
@@ -42,7 +43,7 @@ const CardItem: React.FC<{
         type="button"
       >
         {typeof index === "number" && (
-          <span className="text-gray-400 font-bold w-8 text-center text-sm flex-shrink-0 mt-1">
+          <span className="text-gray-00 font-bold w-8 text-center text-sm flex-shrink-0 mt-1">
             {index + 1}
           </span>
         )}
@@ -203,6 +204,12 @@ function LandingContent() {
       </div>
     );
   }
+
+// const {data} = useQuery({
+//   queryFn:showCaptcha
+
+// })
+// console.log(data)
 
   return (
     <div className="w-full min-h-screen px-2 sm:px-4 md:px-6 py-4">

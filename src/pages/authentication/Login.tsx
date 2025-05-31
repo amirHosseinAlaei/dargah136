@@ -1,4 +1,6 @@
 import { Form, Input, Button } from "antd";
+import { Icon } from "@iconify/react";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
   const onFinish = (values) => {
@@ -8,11 +10,13 @@ function Login() {
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
+  
+  const nav = useNavigate();
 
   return (
     <div
       className="
-        rounded-2xl p-4 shadow-2xl bg-white flex flex-col lg:flex-row max-w-full lg:max-w-4xl h-auto min-h-[85vh] lg:h-[80vh] mt-2 mx-auto border border-gray-200 overflow-hidden
+        rounded-2xl p-7 shadow-2xl bg-white flex flex-col lg:flex-row max-w-full lg:max-w-4xl h-auto min-h-[75vh] lg:h-[75vh] -mt-6  lg:mt-2 mx-auto border border-gray-200 overflow-hidden
       "
     >
       {/* بخش سمت چپ */}
@@ -57,9 +61,7 @@ function Login() {
               ورود
             </p>
             <Form.Item
-              label={
-                <span className="font-semibold text-gray-700">نام کاربری</span>
-              }
+              label={<span className="font-semibold text-gray-700">نام کاربری</span>}
               name="username"
               rules={[
                 { required: true, message: "لطفا نام کاربری را وارد کنید!" },
@@ -72,9 +74,7 @@ function Login() {
             </Form.Item>
 
             <Form.Item
-              label={
-                <span className="font-semibold text-gray-700">رمز عبور</span>
-              }
+              label={<span className="font-semibold text-gray-700">رمز عبور</span>}
               name="password"
               rules={[
                 { required: true, message: "لطفا رمز عبور را وارد کنید!" },
@@ -86,12 +86,42 @@ function Login() {
               />
             </Form.Item>
 
+            {/* کپچا */}
+            <Form.Item
+              label={<span className="font-semibold text-gray-700">کپچا</span>}
+              name="captcha"
+              rules={[
+                { required: true, message: "لطفا کپچا را وارد کنید!" },
+              ]}
+            >
+              <div className="flex items-center gap-2">
+                <Input
+                  placeholder="کپچا را وارد کنید"
+                  className="w-32 flex-1 h-10 rounded-lg border border-gray-300 py-2 px-3 text-center"
+                  maxLength={5}
+                />
+                <button
+                  type="button"
+                  className="h-10 rounded-lg text-blue-600 hover:text-blue-700 bg-transparent border-none p-0 flex items-center justify-center"
+                >
+                  <Icon icon="mdi:refresh" className="text-2xl" />
+                </button>
+                <div className="w-32 flex-1 h-10">
+                  <img
+                    src="https://via.placeholder.com/100x40?text=CAPTCHA"
+                    alt="کپچا"
+                    className="w-full h-full object-cover rounded-lg border border-gray-300"
+                  />
+                </div>
+              </div>
+            </Form.Item>
+
             <Form.Item>
               <Button
                 type="primary"
                 htmlType="submit"
                 block
-                className="bg-blue-700 hover:bg-blue-800 rounded-lg py-2 font-bold text-base"
+                className="!bg-sky-800 hover:!bg-sky-900 py-2 font-bold text-base"
                 style={{ boxShadow: "0 2px 8px rgba(30,64,175,0.09)" }}
               >
                 ورود
@@ -108,18 +138,14 @@ function Login() {
             </Form.Item>
             <div className="flex justify-between px-2">
               <a
-                href="https://example.com/forgot-password"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline hover:text-blue-800"
+                onClick={() => nav("/user2/forget")}
+                className="underline hover:text-blue-800 cursor-pointer"
               >
                 فراموشی رمز عبور
               </a>
               <a
-                href="https://example.com/change-phone"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline hover:text-blue-800"
+                onClick={() => nav("/user2/changeNumber")}
+                className="underline hover:text-blue-800 cursor-pointer"
               >
                 تغییر شماره تلفن
               </a>

@@ -38,7 +38,7 @@ const DashboardLayout = () => {
 
   // منوی موبایل
   const mobileMenu = (
-    <Menu className="!border-0 !shadow-xl !rounded-xl">
+    <Menu className="!border-0 !shadow-xl flex flex-col justify-center items-center !rounded-xl">
       <Menu.Item key="register" className="!p-0 !m-1">
         {renderActionButton({
           label: "ثبت نام شهروند",
@@ -194,7 +194,7 @@ const DashboardLayout = () => {
         <div className="hidden lg:block relative z-10">
           <div className="max-w-7xl mx-auto px-6 py-8">
             <div
-              className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-lg overflow-hidden"
+              className="bg-white   rounded-2xl shadow-lg overflow-hidden"
               style={{ height: "calc(100vh - 160px)" }}
             >
               <div className="flex h-full">

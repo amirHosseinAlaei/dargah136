@@ -1,7 +1,11 @@
 
 function Loading() {
   return (
-    <div>قسمت لودینگ بعدا باید درست بشه </div>
+    <div className="flex justify-center items-center ">
+      
+      <p className="bg-white p-6 rounded-lg shadow-lg">لودینگ که باید درست بشه </p>
+      
+       </div>
   )
 }
 
