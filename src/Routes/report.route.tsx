@@ -1,9 +1,7 @@
 import { lazy, Suspense } from "react";
-import LandingLayout from "../leyout/LandingLeyout";
 import Loading from "../components/commoen/Loading";
 import ReportIndex from "../pages/Report/ReportIndex";
-
-const LandingContent = lazy(() => import("../pages/landing/LandingContent"));
+import ReportLayout from "../leyout/ReportLayout";
 const Suspenswrapper: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
@@ -12,7 +10,7 @@ const Suspenswrapper: React.FC<{ children: React.ReactNode }> = ({
 
 const ReportRoutes = {
   path: "/",
-  element: <LandingLayout />,
+  element: <ReportLayout />,
 
   children: [
     {

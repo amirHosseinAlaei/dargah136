@@ -16,7 +16,7 @@ function Login() {
   return (
     <div
       className="
-        rounded-2xl p-7 shadow-2xl bg-white flex flex-col lg:flex-row max-w-full lg:max-w-4xl h-auto min-h-[75vh] lg:h-[75vh] -mt-6  lg:mt-2 mx-auto border border-gray-200 overflow-hidden
+        rounded-2xl p-7 shadow-2xl bg-white flex flex-col lg:flex-row max-w-full lg:max-w-4xl h-auto min-h-[65vh] lg:h-[65vh] -mt-6  lg:mt-2 mx-auto border border-gray-200 overflow-auto
       "
     >
       {/* بخش سمت چپ */}
