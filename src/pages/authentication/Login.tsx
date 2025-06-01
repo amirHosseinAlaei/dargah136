@@ -10,13 +10,13 @@ function Login() {
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
-  
+
   const nav = useNavigate();
 
   return (
     <div
       className="
-        rounded-2xl p-7 shadow-2xl bg-white flex flex-col lg:flex-row max-w-full lg:max-w-4xl h-auto min-h-[65vh] lg:h-[65vh] -mt-6  lg:mt-2 mx-auto border border-gray-200 overflow-auto
+        rounded-2xl p-7 shadow-2xl bg-white flex flex-col lg:flex-row max-w-full lg:max-w-4xl h-auto min-h-[75vh] lg:h-[85vh] -mt-6  lg:mt-2 mx-auto border border-gray-200 overflow-auto
       "
     >
       {/* بخش سمت چپ */}
@@ -61,7 +61,9 @@ function Login() {
               ورود
             </p>
             <Form.Item
-              label={<span className="font-semibold text-gray-700">نام کاربری</span>}
+              label={
+                <span className="font-semibold text-gray-700">نام کاربری</span>
+              }
               name="username"
               rules={[
                 { required: true, message: "لطفا نام کاربری را وارد کنید!" },
@@ -74,7 +76,9 @@ function Login() {
             </Form.Item>
 
             <Form.Item
-              label={<span className="font-semibold text-gray-700">رمز عبور</span>}
+              label={
+                <span className="font-semibold text-gray-700">رمز عبور</span>
+              }
               name="password"
               rules={[
                 { required: true, message: "لطفا رمز عبور را وارد کنید!" },
@@ -90,9 +94,7 @@ function Login() {
             <Form.Item
               label={<span className="font-semibold text-gray-700">کپچا</span>}
               name="captcha"
-              rules={[
-                { required: true, message: "لطفا کپچا را وارد کنید!" },
-              ]}
+              rules={[{ required: true, message: "لطفا کپچا را وارد کنید!" }]}
             >
               <div className="flex items-center gap-2">
                 <Input
