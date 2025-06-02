@@ -13,7 +13,7 @@ function ReportLayout() {
 
   return (
     <Layout className=" h-[100vh] bg-gray-100 font-sans">
-      <Header className="!bg-white shadow-md px-8 flex items-center justify-between">
+      <Header className="!bg-white  j shadow-md px-8 flex items-center justify-between">
         <h1 className="text-xl font-bold text-gray-800">سامانه گزارش فساد</h1>
         <Button
           className="!bg-[#00598A] hover:!bg-[#004466] !p-5 !font-bold "

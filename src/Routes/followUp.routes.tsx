@@ -1,27 +1,27 @@
 import { lazy, Suspense } from "react";
 import Loading from "../components/commoen/Loading";
-import ReportLayout from "../leyout/ReportLayout";
+import FollowUpLayout from "../leyout/FollowUpLayout";
 
-const ReportIndex = lazy(() => import("../pages/Report/ReportIndex"));
+const FollowUpIndex = lazy(() => import("../pages/followUp/followUpIndex"));
 
 const Suspenswrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return <Suspense fallback={<Loading />}>{children}</Suspense>;
 };
 
-const ReportRoutes = {
+const FollowUpRoutes = {
   path: "/",
-  element: <ReportLayout />,
+  element: <FollowUpLayout />,
 
   children: [
     {
-      path: "/dargah/dashboard2/report",
+      path: "/dargah/dashboard2/followUp",
       element: (
         <Suspenswrapper>
-          <ReportIndex />
+          <FollowUpIndex />
         </Suspenswrapper>
       ),
     },
   ],
 };
 
-export default ReportRoutes;
+export default FollowUpRoutes;

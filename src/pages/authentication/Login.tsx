@@ -1,17 +1,26 @@
 import { Form, Input, Button } from "antd";
 import { Icon } from "@iconify/react";
 import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { showCaptcha } from "../../service/Authenticate";
 
 function Login() {
+  const nav = useNavigate();
+
+  // واکشی کد امنیتی با react-query
+  const { data, error, isLoading, refetch } = useQuery({
+    queryKey: ["captcha"],
+    queryFn: showCaptcha,
+  });
+
   const onFinish = (values) => {
     console.log("Success:", values);
+    // اینجا ارسال اطلاعات ورود یا هر عملیاتی که میخواید انجام بدید
   };
 
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
-
-  const nav = useNavigate();
 
   return (
     <div
@@ -92,28 +101,41 @@ function Login() {
 
             {/* کپچا */}
             <Form.Item
-              label={<span className="font-semibold text-gray-700">کپچا</span>}
+              label={<span className="font-semibold text-gray-700">کد امنیتی</span>}
               name="captcha"
-              rules={[{ required: true, message: "لطفا کپچا را وارد کنید!" }]}
+              rules={[{ required: true, message: "لطفا کد امنیتی را وارد کنید!" }]}
             >
               <div className="flex items-center gap-2">
                 <Input
-                  placeholder="کپچا را وارد کنید"
-                  className="w-32 flex-1 h-10 rounded-lg border border-gray-300 py-2 px-3 text-center"
+                  placeholder="کد امنیتی را وارد کنید"
+                  className="!w-32 flex-1 h-10 rounded-lg border border-gray-300 py-2 px-3 text-center"
                   maxLength={5}
                 />
                 <button
                   type="button"
                   className="h-10 rounded-lg text-blue-600 hover:text-blue-700 bg-transparent border-none p-0 flex items-center justify-center"
+                  onClick={() => refetch()}
                 >
                   <Icon icon="mdi:refresh" className="text-2xl" />
                 </button>
-                <div className="w-32 flex-1 h-10">
-                  <img
-                    src="https://via.placeholder.com/100x40?text=CAPTCHA"
-                    alt="کپچا"
-                    className="w-full h-full object-cover rounded-lg border border-gray-300"
-                  />
+                <div className="!w-48 h-10 flex items-center justify-center rounded-lg border border-gray-300 bg-gray-50 text-sm text-gray-500">
+                  {isLoading ? (
+                    "در حال دریافت کد امنیتی..."
+                  ) : error ? (
+                    "خطا در دریافت کد امنیتی"
+                  ) : data?.captchaImageUrl ? (
+                    <img
+                      src={data.captchaImageUrl}
+                      alt="کد امنیتی"
+                      className="w-full h-full !object-fill rounded-lg"
+                    />
+                  ) : (
+                    <img
+                      src="https://via.placeholder.com/150x40?text=CAPTCHA"
+                      alt="کد امنیتی"
+                      className="w-full h-full object-cover rounded-lg"
+                    />
+                  )}
                 </div>
               </div>
             </Form.Item>
