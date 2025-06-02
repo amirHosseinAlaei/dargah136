@@ -16,6 +16,7 @@ import { InboxOutlined, InfoCircleOutlined } from "@ant-design/icons";
 
 import { useQuery } from "@tanstack/react-query";
 import { showCaptcha } from "../../service/Authenticate"; // مسیر را با مسیر درست تنظیم کن
+import { Icon } from "@iconify/react/dist/iconify.js";
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -597,50 +598,49 @@ function ReportIndex() {
             )}
 
             {/* کپچا */}
-            <Form.Item
-              label="کد امنیتی"
-              name="captcha"
-              rules={[
-                { required: true, message: "لطفا کد امنیتی را وارد کنید!" },
-              ]}
-            >
-              <div className="flex items-center gap-2">
-                <Input
-                  placeholder="کد امنیتی را وارد کنید"
-                  className="!w-32 h-10 rounded-lg border border-gray-300 py-2 px-3 text-center"
-                  maxLength={5}
-                  autoComplete="off"
-                />
+        
+        <Form.Item
+  label="کد امنیتی"
+  name="captcha"
+  rules={[{ required: true, message: "لطفا کد امنیتی را وارد کنید!" }]}
+>
+  <div className="flex items-center gap-2">
+    <Input
+      placeholder="کد امنیتی را وارد کنید"
+      className="!w-32 h-10 rounded-lg border border-gray-300 py-2 px-3 text-center"
+      maxLength={5}
+      autoComplete="off"
+    />
 
-                <button
-                  type="button"
-                  className="h-10 rounded-lg text-blue-600 hover:text-blue-700 bg-transparent border-none p-0 flex items-center justify-center"
-                  onClick={() => refetchCaptcha()}
-                >
-                  🔄
-                </button>
+    <button
+      type="button"
+      className="h-10 w-10 rounded-lg text-blue-600 hover:text-blue-700 bg-transparent border-none p-0 flex items-center justify-center"
+      onClick={() => refetchCaptcha()}
+    >
+      <Icon icon="mdi:refresh" width="24" height="24" />
+    </button>
 
-                <div className="!w-48 h-10 flex items-center justify-center rounded-lg border border-gray-300 bg-gray-50 text-sm text-gray-500">
-                  {captchaLoading ? (
-                    "در حال دریافت کد امنیتی..."
-                  ) : captchaError ? (
-                    "خطا در دریافت کد امنیتی"
-                  ) : captchaData?.captchaImageUrl ? (
-                    <img
-                      src={captchaData.captchaImageUrl}
-                      alt="کد امنیتی"
-                      className="w-full h-full !object-fill rounded-lg"
-                    />
-                  ) : (
-                    <img
-                      src="https://via.placeholder.com/150x40?text=CAPTCHA"
-                      alt="کد امنیتی"
-                      className="w-full h-full object-cover rounded-lg"
-                    />
-                  )}
-                </div>
-              </div>
-            </Form.Item>
+    <div className="h-10 flex items-center justify-center rounded-lg border border-gray-300 bg-gray-50 text-sm text-gray-500">
+      {captchaLoading ? (
+        "در حال دریافت کد امنیتی..."
+      ) : captchaError ? (
+        "خطا در دریافت کد امنیتی"
+      ) : captchaData?.captchaImageUrl ? (
+        <img
+          src={captchaData.captchaImageUrl}
+          alt="کد امنیتی"
+          className="h-full !object-fill rounded-lg"
+        />
+      ) : (
+        <img
+          src="https://via.placeholder.com/150x40?text=CAPTCHA"
+          alt="کد امنیتی"
+          className="w-full h-full object-cover rounded-lg"
+        />
+      )}
+    </div>
+  </div>
+</Form.Item>
           </div>
         )}
 
@@ -655,13 +655,18 @@ function ReportIndex() {
 
           <Col>
             {activeTab !== totalSteps.toString() && (
-              <Button size="large" type="primary" onClick={nextTab}>
+              <Button
+                className="!bg-[#00598A] duration-300 hover:!duration-300 hover:!bg-[#004c8a]"
+                size="large"
+                type="primary"
+                onClick={nextTab}
+              >
                 بعدی
               </Button>
             )}
 
             {activeTab === totalSteps.toString() && (
-              <Button
+              <Button className="!bg-[#00598A] duration-300 hover:!duration-300 hover:!bg-[#004c8a]"
                 size="large"
                 type="primary"
                 loading={loading}
@@ -714,9 +719,6 @@ function ReportIndex() {
             </p>
             <p>
               <b>توضیحات:</b> {summaryData.description}
-            </p>
-            <p>
-              <b>کد امنیتی:</b> {summaryData.captcha}
             </p>
             <p>
               <b>فایل ضمیمه:</b>{" "}
