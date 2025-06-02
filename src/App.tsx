@@ -9,9 +9,11 @@ function App() {
   return (
     <ConfigProvider
       theme={{
+        
         token: {
           colorInfo: "var(--blue)",
           fontFamily: "IRANYekanXFaNum"
+          
         },
       }}
     >

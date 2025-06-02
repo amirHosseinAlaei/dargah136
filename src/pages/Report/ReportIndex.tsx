@@ -30,7 +30,7 @@ const Stepper = ({ activeStep, onStepClick, validatedTabs }) => {
         const buttonClasses = isValidated
           ? "border-green-500 bg-green-500 text-white"
           : isActive
-          ? "border-blue-600 bg-blue-600 text-white"
+          ? "border-[#00598A] bg-[#00598A] text-white"
           : "border-gray-300 text-gray-400 bg-transparent cursor-default";
 
         return (
@@ -57,6 +57,7 @@ const Stepper = ({ activeStep, onStepClick, validatedTabs }) => {
     </div>
   );
 };
+
 
 function ReportIndex() {
   const [form] = Form.useForm();
@@ -191,8 +192,8 @@ function ReportIndex() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-center mb-6 text-blue-600 font-bold text-2xl">
+    <div className="max-w-3xl mx-auto mt-10 p-6  rounded-lg ">
+      <h2 className="text-center mb-6 text-black font-black  text-2xl">
         فرم گزارش فساد
       </h2>
 
@@ -535,7 +536,7 @@ function ReportIndex() {
           )}
 
           {activeTab !== totalSteps.toString() && (
-            <Button type="primary" size="large" onClick={nextTab}>
+            <Button className="!bg-[#00598A]  hover:!bg-[#004466]" type="primary" size="large" onClick={nextTab}>
               مرحله بعد
             </Button>
           )}
