@@ -14,6 +14,9 @@ import {
 } from "antd";
 import { InboxOutlined, InfoCircleOutlined } from "@ant-design/icons";
 
+import { useQuery } from "@tanstack/react-query";
+import { showCaptcha } from "../../service/Authenticate"; // مسیر را با مسیر درست تنظیم کن
+
 const { Option } = Select;
 const { TextArea } = Input;
 
@@ -58,7 +61,6 @@ const Stepper = ({ activeStep, onStepClick, validatedTabs }) => {
   );
 };
 
-
 function ReportIndex() {
   const [form] = Form.useForm();
   const maxDescriptionLength = 400;
@@ -78,6 +80,17 @@ function ReportIndex() {
 
   const totalSteps = 4;
 
+  // کپچا
+  const {
+    data: captchaData,
+    error: captchaError,
+    isLoading: captchaLoading,
+    refetch: refetchCaptcha,
+  } = useQuery({
+    queryKey: ["captcha"],
+    queryFn: showCaptcha,
+  });
+
   const getFieldsForCurrentTab = (tabKey) => {
     switch (tabKey) {
       case "1":
@@ -87,7 +100,7 @@ function ReportIndex() {
       case "3":
         return ["organizationLevel", "participation"];
       case "4":
-        return ["description"];
+        return ["description", "captcha"]; // اضافه کردن کپچا
       default:
         return [];
     }
@@ -140,10 +153,8 @@ function ReportIndex() {
 
   const handleShowSummaryModal = async () => {
     try {
-      // اعتبارسنجی کل فرم (همه فیلدها)
       await form.validateFields();
 
-      // گرفتن همه داده‌های فرم
       const values = form.getFieldsValue(true);
       setSummaryData(values);
       setIsModalVisible(true);
@@ -281,7 +292,10 @@ function ReportIndex() {
                   }
                   name="subject"
                   rules={[
-                    { required: true, message: "موضوع گزارش الزامی است" },
+                    {
+                      required: true,
+                      message: "موضوع گزارش الزامی است",
+                    },
                   ]}
                 >
                   <Input
@@ -310,7 +324,10 @@ function ReportIndex() {
                   }
                   name="reportType"
                   rules={[
-                    { required: true, message: "نوع گزارش را انتخاب کنید" },
+                    {
+                      required: true,
+                      message: "لطفا نوع گزارش را انتخاب کنید",
+                    },
                   ]}
                 >
                   <Select
@@ -319,9 +336,9 @@ function ReportIndex() {
                     bordered
                     onKeyDown={onEnterNext}
                   >
-                    <Option value="اداری">اداری</Option>
                     <Option value="مالی">مالی</Option>
-                    <Option value="سایر">سایر</Option>
+                    <Option value="رفتاری">رفتاری</Option>
+                    <Option value="ساختاری">ساختاری</Option>
                   </Select>
                 </Form.Item>
               </Col>
@@ -330,22 +347,25 @@ function ReportIndex() {
                 <Form.Item
                   label={
                     <span className={labelStyle}>
-                      فوریت&nbsp;
-                      <Tooltip title="فوریت گزارش را انتخاب کنید">
+                      درجه فوریت&nbsp;
+                      <Tooltip title="درجه فوریت گزارش را انتخاب کنید">
                         <InfoCircleOutlined className="text-blue-600" />
                       </Tooltip>
                     </span>
                   }
                   name="urgency"
-                  rules={[{ required: true, message: "فوریت را انتخاب کنید" }]}
+                  rules={[
+                    { required: true, message: "درجه فوریت را انتخاب کنید" },
+                  ]}
                 >
                   <Select
-                    placeholder="انتخاب فوریت"
+                    placeholder="درجه فوریت"
                     size="large"
                     bordered
                     onKeyDown={onEnterNext}
                   >
                     <Option value="عادی">عادی</Option>
+                    <Option value="مهم">مهم</Option>
                     <Option value="فوری">فوری</Option>
                   </Select>
                 </Form.Item>
@@ -355,27 +375,26 @@ function ReportIndex() {
                 <Form.Item
                   label={
                     <span className={labelStyle}>
-                      میزان فساد&nbsp;
-                      <Tooltip title="میزان فساد را مشخص کنید">
+                      ارزش ریالی تخلف&nbsp;
+                      <Tooltip title="ارزش ریالی تخلف را وارد کنید">
                         <InfoCircleOutlined className="text-blue-600" />
                       </Tooltip>
                     </span>
                   }
                   name="corruptionValue"
                   rules={[
-                    { required: true, message: "میزان فساد را مشخص کنید" },
+                    {
+                      required: true,
+                      message: "ارزش ریالی تخلف را وارد کنید",
+                    },
                   ]}
                 >
-                  <Select
-                    placeholder="انتخاب میزان فساد"
+                  <Input
+                    type="number"
+                    placeholder="مثال: 1000000"
                     size="large"
-                    bordered
                     onKeyDown={onEnterNext}
-                  >
-                    <Option value="کم">کم</Option>
-                    <Option value="متوسط">متوسط</Option>
-                    <Option value="زیاد">زیاد</Option>
-                  </Select>
+                  />
                 </Form.Item>
               </Col>
 
@@ -383,8 +402,8 @@ function ReportIndex() {
                 <Form.Item
                   label={
                     <span className={labelStyle}>
-                      دامنه جغرافیایی&nbsp;
-                      <Tooltip title="دامنه جغرافیایی را انتخاب کنید">
+                      گستره جغرافیایی&nbsp;
+                      <Tooltip title="گستره جغرافیایی را انتخاب کنید">
                         <InfoCircleOutlined className="text-blue-600" />
                       </Tooltip>
                     </span>
@@ -393,19 +412,19 @@ function ReportIndex() {
                   rules={[
                     {
                       required: true,
-                      message: "دامنه جغرافیایی را انتخاب کنید",
+                      message: "گستره جغرافیایی را انتخاب کنید",
                     },
                   ]}
                 >
                   <Select
-                    placeholder="انتخاب دامنه جغرافیایی"
+                    placeholder="گستره جغرافیایی"
                     size="large"
                     bordered
                     onKeyDown={onEnterNext}
                   >
                     <Option value="محلی">محلی</Option>
-                    <Option value="ملی">ملی</Option>
-                    <Option value="بین‌المللی">بین‌المللی</Option>
+                    <Option value="منطقه‌ای">منطقه‌ای</Option>
+                    <Option value="کشوری">کشوری</Option>
                   </Select>
                 </Form.Item>
               </Col>
@@ -421,25 +440,28 @@ function ReportIndex() {
                   label={
                     <span className={labelStyle}>
                       سطح سازمانی&nbsp;
-                      <Tooltip title="سطح سازمانی را انتخاب کنید">
+                      <Tooltip title="سطح سازمانی مربوطه را انتخاب کنید">
                         <InfoCircleOutlined className="text-blue-600" />
                       </Tooltip>
                     </span>
                   }
                   name="organizationLevel"
                   rules={[
-                    { required: true, message: "سطح سازمانی را انتخاب کنید" },
+                    {
+                      required: true,
+                      message: "لطفا سطح سازمانی را انتخاب کنید",
+                    },
                   ]}
                 >
                   <Select
-                    placeholder="انتخاب سطح سازمانی"
+                    placeholder="سطح سازمانی"
                     size="large"
                     bordered
                     onKeyDown={onEnterNext}
                   >
-                    <Option value="سازمانی">سازمانی</Option>
-                    <Option value="مدیریتی">مدیریتی</Option>
-                    <Option value="عملیاتی">عملیاتی</Option>
+                    <Option value="سطح ۱">سطح ۱</Option>
+                    <Option value="سطح ۲">سطح ۲</Option>
+                    <Option value="سطح ۳">سطح ۳</Option>
                   </Select>
                 </Form.Item>
               </Col>
@@ -448,25 +470,28 @@ function ReportIndex() {
                 <Form.Item
                   label={
                     <span className={labelStyle}>
-                      نحوه مشارکت&nbsp;
-                      <Tooltip title="نحوه مشارکت را مشخص کنید">
+                      مشارکت&nbsp;
+                      <Tooltip title="نوع مشارکت را انتخاب کنید">
                         <InfoCircleOutlined className="text-blue-600" />
                       </Tooltip>
                     </span>
                   }
                   name="participation"
                   rules={[
-                    { required: true, message: "نحوه مشارکت را مشخص کنید" },
+                    {
+                      required: true,
+                      message: "لطفا نوع مشارکت را انتخاب کنید",
+                    },
                   ]}
                 >
                   <Select
-                    placeholder="انتخاب نحوه مشارکت"
+                    placeholder="نوع مشارکت"
                     size="large"
                     bordered
                     onKeyDown={onEnterNext}
                   >
-                    <Option value="حضوری">حضوری</Option>
-                    <Option value="غیرحضوری">غیرحضوری</Option>
+                    <Option value="دخیل">دخیل</Option>
+                    <Option value="غیر دخیل">غیر دخیل</Option>
                   </Select>
                 </Form.Item>
               </Col>
@@ -479,82 +504,176 @@ function ReportIndex() {
             <Form.Item
               label={
                 <span className={labelStyle}>
-                  توضیحات تکمیلی&nbsp;
-                  <Tooltip title="توضیحات بیشتر خود را وارد کنید">
+                  توضیحات&nbsp;
+                  <Tooltip title="توضیحات تکمیلی گزارش">
                     <InfoCircleOutlined className="text-blue-600" />
                   </Tooltip>
                 </span>
               }
               name="description"
               rules={[
-                { required: true, message: "وارد کردن توضیحات الزامی است" },
+                {
+                  required: true,
+                  message: "لطفا توضیحات را وارد کنید",
+                },
+                {
+                  max: maxDescriptionLength,
+                  message: `حداکثر ${maxDescriptionLength} کاراکتر مجاز است`,
+                },
               ]}
             >
               <TextArea
-                rows={5}
+                placeholder="توضیحات خود را وارد کنید..."
+                rows={4}
                 maxLength={maxDescriptionLength}
-                placeholder="توضیحات خود را وارد کنید"
                 onKeyDown={onEnterNext}
-                showCount
               />
             </Form.Item>
 
-            <Form.Item label="فایل پیوست">
+            <Form.Item
+              label="ضمیمه گزارش"
+              name="file"
+              valuePropName="fileList"
+              getValueFromEvent={(e) => e && e.fileList}
+              rules={[
+                {
+                  validator: (_, value) => {
+                    if (!value || value.length === 0) {
+                      return Promise.resolve();
+                    }
+                    if (value.length > 1) {
+                      return Promise.reject(
+                        new Error("تنها یک فایل قابل آپلود است.")
+                      );
+                    }
+                    const allowedTypes = [
+                      "application/pdf",
+                      "image/jpeg",
+                      "image/png",
+                    ];
+                    const isValidType = value.every((file) =>
+                      allowedTypes.includes(file.type)
+                    );
+                    if (!isValidType) {
+                      return Promise.reject(
+                        new Error("فرمت فایل باید PDF، JPG یا PNG باشد.")
+                      );
+                    }
+                    return Promise.resolve();
+                  },
+                },
+              ]}
+            >
               <Upload.Dragger
+                name="file"
                 multiple={false}
-                beforeUpload={() => false} // جلوگیری از آپلود خودکار
+                accept=".pdf,.jpeg,.jpg,.png"
                 fileList={fileList}
                 onChange={handleFileChange}
                 maxCount={1}
-                accept=".jpg,.png,.pdf,.doc,.docx"
+                beforeUpload={() => false} // جلوگیری از آپلود خودکار
               >
                 <p className="ant-upload-drag-icon">
                   <InboxOutlined />
                 </p>
                 <p className="ant-upload-text">
-                  فایل را اینجا رها کنید یا کلیک کنید
+                  فایل را اینجا بکشید یا کلیک کنید
                 </p>
                 <p className="ant-upload-hint">
-                  فایل‌های jpg, png, pdf, doc قابل قبول هستند
+                  فقط فایل‌های PDF، JPG و PNG مجاز است.
                 </p>
               </Upload.Dragger>
-              {filePreview && (
-                <div className="mt-3">
-                  <Image src={filePreview} alt="پیش نمایش فایل" />
+            </Form.Item>
+
+            {/* پیش‌نمایش فایل */}
+            {filePreview && (
+              <div className="mb-4 flex justify-center">
+                <Image
+                  src={filePreview}
+                  alt="پیش نمایش فایل"
+                  style={{ maxHeight: 200 }}
+                />
+              </div>
+            )}
+
+            {/* کپچا */}
+            <Form.Item
+              label="کد امنیتی"
+              name="captcha"
+              rules={[
+                { required: true, message: "لطفا کد امنیتی را وارد کنید!" },
+              ]}
+            >
+              <div className="flex items-center gap-2">
+                <Input
+                  placeholder="کد امنیتی را وارد کنید"
+                  className="!w-32 h-10 rounded-lg border border-gray-300 py-2 px-3 text-center"
+                  maxLength={5}
+                  autoComplete="off"
+                />
+
+                <button
+                  type="button"
+                  className="h-10 rounded-lg text-blue-600 hover:text-blue-700 bg-transparent border-none p-0 flex items-center justify-center"
+                  onClick={() => refetchCaptcha()}
+                >
+                  🔄
+                </button>
+
+                <div className="!w-48 h-10 flex items-center justify-center rounded-lg border border-gray-300 bg-gray-50 text-sm text-gray-500">
+                  {captchaLoading ? (
+                    "در حال دریافت کد امنیتی..."
+                  ) : captchaError ? (
+                    "خطا در دریافت کد امنیتی"
+                  ) : captchaData?.captchaImageUrl ? (
+                    <img
+                      src={captchaData.captchaImageUrl}
+                      alt="کد امنیتی"
+                      className="w-full h-full !object-fill rounded-lg"
+                    />
+                  ) : (
+                    <img
+                      src="https://via.placeholder.com/150x40?text=CAPTCHA"
+                      alt="کد امنیتی"
+                      className="w-full h-full object-cover rounded-lg"
+                    />
+                  )}
                 </div>
-              )}
+              </div>
             </Form.Item>
           </div>
         )}
 
-        {/* دکمه‌های ناوبری */}
-        <div className="flex justify-between">
-          {activeTab !== "1" && (
-            <Button size="large" onClick={prevTab}>
-              بازگشت
-            </Button>
-          )}
+        <Row justify="space-between" gutter={16}>
+          <Col>
+            {activeTab !== "1" && (
+              <Button size="large" onClick={prevTab}>
+                قبلی
+              </Button>
+            )}
+          </Col>
 
-          {activeTab !== totalSteps.toString() && (
-            <Button className="!bg-[#00598A]  hover:!bg-[#004466]" type="primary" size="large" onClick={nextTab}>
-              مرحله بعد
-            </Button>
-          )}
+          <Col>
+            {activeTab !== totalSteps.toString() && (
+              <Button size="large" type="primary" onClick={nextTab}>
+                بعدی
+              </Button>
+            )}
 
-          {activeTab === totalSteps.toString() && (
-            <Button
-              type="primary"
-              size="large"
-              onClick={handleShowSummaryModal}
-              loading={loading}
-            >
-              ثبت نهایی و مشاهده خلاصه
-            </Button>
-          )}
-        </div>
+            {activeTab === totalSteps.toString() && (
+              <Button
+                size="large"
+                type="primary"
+                loading={loading}
+                onClick={handleShowSummaryModal}
+              >
+                ارسال گزارش
+              </Button>
+            )}
+          </Col>
+        </Row>
       </Form>
 
-      {/* مدال خلاصه گزارش */}
       <Modal
         title="خلاصه گزارش"
         visible={isModalVisible}
@@ -563,56 +682,47 @@ function ReportIndex() {
         okText="تایید و ارسال"
         cancelText="بازگشت"
         confirmLoading={loading}
-        centered
       >
-        {summaryData ? (
-          <>
+        {summaryData && (
+          <div className="space-y-3 text-right text-gray-800">
             <p>
-              <strong>گزینه انتخاب شده:</strong> {summaryData.option || "-"}
+              <b>گزینه انتخاب شده:</b> {summaryData.option}
             </p>
             <p>
-              <strong>دستگاه اجرایی:</strong> {summaryData.executive || "-"}
+              <b>دستگاه اجرایی:</b> {summaryData.executive}
             </p>
             <p>
-              <strong>موضوع گزارش:</strong> {summaryData.subject || "-"}
+              <b>موضوع گزارش:</b> {summaryData.subject}
             </p>
             <p>
-              <strong>نوع گزارش:</strong> {summaryData.reportType || "-"}
+              <b>نوع گزارش:</b> {summaryData.reportType}
             </p>
             <p>
-              <strong>فوریت:</strong> {summaryData.urgency || "-"}
+              <b>درجه فوریت:</b> {summaryData.urgency}
             </p>
             <p>
-              <strong>میزان فساد:</strong> {summaryData.corruptionValue || "-"}
+              <b>ارزش ریالی تخلف:</b> {summaryData.corruptionValue}
             </p>
             <p>
-              <strong>دامنه جغرافیایی:</strong>{" "}
-              {summaryData.geographicRange || "-"}
+              <b>گستره جغرافیایی:</b> {summaryData.geographicRange}
             </p>
             <p>
-              <strong>سطح سازمانی:</strong>{" "}
-              {summaryData.organizationLevel || "-"}
+              <b>سطح سازمانی:</b> {summaryData.organizationLevel}
             </p>
             <p>
-              <strong>نحوه مشارکت:</strong> {summaryData.participation || "-"}
+              <b>مشارکت:</b> {summaryData.participation}
             </p>
             <p>
-              <strong>توضیحات تکمیلی:</strong> {summaryData.description || "-"}
+              <b>توضیحات:</b> {summaryData.description}
             </p>
-
-            {filePreview ? (
-              <div className="mt-3">
-                <strong>پیش نمایش فایل پیوست:</strong>
-                <Image src={filePreview} alt="پیش نمایش فایل" />
-              </div>
-            ) : fileList.length > 0 ? (
-              <div className="mt-3">
-                <strong>فایل پیوست:</strong> {fileList[0].name}
-              </div>
-            ) : null}
-          </>
-        ) : (
-          <p>در حال بارگذاری...</p>
+            <p>
+              <b>کد امنیتی:</b> {summaryData.captcha}
+            </p>
+            <p>
+              <b>فایل ضمیمه:</b>{" "}
+              {fileList.length > 0 ? fileList[0].name : "هیچ فایلی انتخاب نشده"}
+            </p>
+          </div>
         )}
       </Modal>
     </div>
