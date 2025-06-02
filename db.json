@@ -13,7 +13,10 @@
       "title": "گزارش فساد ناشناس",
       "description": "گزارش فساد ناشناس",
       "icon": "database",
-      "img": "https://136.bazresi.ir/dargah/assets/logos/BB.png"
+      "img": "https://136.bazresi.ir/dargah/assets/logos/BB.png" , 
+
+      "link": "/dashboard2/report"
+      
     },
     {
       "id": 3,

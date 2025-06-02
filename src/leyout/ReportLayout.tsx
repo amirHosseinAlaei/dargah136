@@ -4,7 +4,7 @@ const { Content } = Layout;
 
 function ReportLayout() {
   return (
-    <Layout className=" bg-gray-50 font-sans">
+    <Layout className="  font-sans !bg-white">
       <Content className="flex flex-col items-center justify-center px-8 py-16">
         {/* Container اصلی فرم */}
         <div
@@ -16,10 +16,7 @@ function ReportLayout() {
             duration-300
           "
         >
-
           <Outlet />
-
-      
         </div>
       </Content>
     </Layout>

@@ -10,14 +10,53 @@ import {
   Col,
   Tooltip,
   message,
-  Tabs,
+  Modal,
 } from "antd";
 import { InboxOutlined, InfoCircleOutlined } from "@ant-design/icons";
 
 const { Option } = Select;
 const { TextArea } = Input;
-const { Dragger } = Upload;
-const { TabPane } = Tabs;
+
+const steps = [1, 2, 3, 4];
+
+const Stepper = ({ activeStep, onStepClick, validatedTabs }) => {
+  return (
+    <div className="flex justify-center items-center mb-6 select-none">
+      {steps.map((step, idx) => {
+        const isActive = activeStep === step.toString();
+        const isValidated = validatedTabs[step - 1];
+        const isClickable = isValidated || step === 1;
+
+        const buttonClasses = isValidated
+          ? "border-green-500 bg-green-500 text-white"
+          : isActive
+          ? "border-blue-600 bg-blue-600 text-white"
+          : "border-gray-300 text-gray-400 bg-transparent cursor-default";
+
+        return (
+          <React.Fragment key={step}>
+            <button
+              onClick={() => isClickable && onStepClick(step.toString())}
+              disabled={!isClickable}
+              className={`w-9 h-9 rounded-full border-2 font-bold transition-colors duration-300 cursor-pointer z-20 flex items-center justify-center ${buttonClasses}`}
+              type="button"
+            >
+              {step}
+            </button>
+
+            {idx !== steps.length - 1 && (
+              <div
+                className={`flex-1 h-0.5 mx-2 rounded ${
+                  validatedTabs[idx] ? "bg-green-500" : "bg-gray-300"
+                }`}
+              />
+            )}
+          </React.Fragment>
+        );
+      })}
+    </div>
+  );
+};
 
 function ReportIndex() {
   const [form] = Form.useForm();
@@ -27,8 +66,15 @@ function ReportIndex() {
   const [filePreview, setFilePreview] = useState(null);
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState("1");
+  const [validatedTabs, setValidatedTabs] = useState([
+    false,
+    false,
+    false,
+    false,
+  ]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [summaryData, setSummaryData] = useState(null);
 
-  const [validatedTabs, setValidatedTabs] = useState([false, false, false, false]);
   const totalSteps = 4;
 
   const getFieldsForCurrentTab = (tabKey) => {
@@ -91,8 +137,24 @@ function ReportIndex() {
     }
   };
 
-  const onFinish = (values) => {
+  const handleShowSummaryModal = async () => {
+    try {
+      // اعتبارسنجی کل فرم (همه فیلدها)
+      await form.validateFields();
+
+      // گرفتن همه داده‌های فرم
+      const values = form.getFieldsValue(true);
+      setSummaryData(values);
+      setIsModalVisible(true);
+    } catch (error) {
+      message.error("لطفا تمامی فیلدهای الزامی را تکمیل کنید.");
+    }
+  };
+
+  const handleConfirmSubmit = () => {
     setLoading(true);
+    setIsModalVisible(false);
+
     setTimeout(() => {
       setLoading(false);
       message.success("گزارش با موفقیت ارسال شد!");
@@ -102,19 +164,11 @@ function ReportIndex() {
       setFilePreview(null);
       setActiveTab("1");
       setValidatedTabs([false, false, false, false]);
+      setSummaryData(null);
     }, 1500);
   };
 
-  const onFinishFailed = () => {
-    message.error("لطفا تمامی فیلدهای الزامی را تکمیل کنید.");
-  };
-
-  const labelStyle = {
-    display: "inline-flex",
-    alignItems: "center",
-    gap: 6,
-    fontWeight: "500",
-  };
+  const labelStyle = "inline-flex items-center gap-1.5 font-medium";
 
   const onValuesChange = (changedValues) => {
     if (changedValues.description !== undefined) {
@@ -137,364 +191,429 @@ function ReportIndex() {
   };
 
   return (
-    <div
-      style={{
-        maxWidth: 900,
-        margin: "40px auto",
-        padding: 24,
-        background: "#fefefe",
-        borderRadius: 12,
-        boxShadow: "0 8px 24px rgba(0,0,0,0.15)",
-      }}
-    >
-      <h2
-        style={{
-          textAlign: "center",
-          marginBottom: 24,
-          color: "#1890ff",
-          fontWeight: "bold",
-          fontSize: 26,
-        }}
-      >
+    <div className="max-w-3xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
+      <h2 className="text-center mb-6 text-blue-600 font-bold text-2xl">
         فرم گزارش فساد
       </h2>
 
-      <div
-        style={{
-          textAlign: "center",
-          marginBottom: 20,
-          fontWeight: "600",
-          fontSize: 16,
-          color: "#555",
-        }}
-      >
+      <div className="text-center mb-5 font-semibold text-gray-700">
         مرحله {activeTab} از {totalSteps}
       </div>
 
       <Form
         form={form}
         layout="vertical"
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
-        scrollToFirstError
+        onFinish={() => {}}
         onValuesChange={onValuesChange}
+        className="space-y-6"
       >
-        <Tabs
-          activeKey={activeTab}
-          onChange={onTabChange}
-          type="card"
-          centered
-          tabBarStyle={{ marginBottom: 24 }} // فاصله بین تب‌ها و محتوا
-        >
-          <TabPane tab="اطلاعات اصلی" key="1" disabled={false}>
-            <div style={{ padding: "24px 12px 36px 12px" }}>
-              <Form.Item
-                label={
-                  <span style={labelStyle}>
-                    انتخاب گزینه&nbsp;
-                    <Tooltip title="یک گزینه از لیست انتخاب کنید">
-                      <InfoCircleOutlined style={{ color: "#1890ff" }} />
-                    </Tooltip>
-                  </span>
-                }
-                name="option"
-                rules={[{ required: true, message: "لطفا یک گزینه انتخاب کنید!" }]}
+        <Stepper
+          activeStep={activeTab}
+          onStepClick={onTabChange}
+          validatedTabs={validatedTabs}
+        />
+
+        {/* Step Contents */}
+        {activeTab === "1" && (
+          <div>
+            <Form.Item
+              label={
+                <span className={labelStyle}>
+                  انتخاب گزینه&nbsp;
+                  <Tooltip title="یک گزینه از لیست انتخاب کنید">
+                    <InfoCircleOutlined className="text-blue-600" />
+                  </Tooltip>
+                </span>
+              }
+              name="option"
+              rules={[
+                { required: true, message: "لطفا یک گزینه انتخاب کنید!" },
+              ]}
+            >
+              <Select
+                placeholder="لطفا انتخاب کنید"
+                size="large"
+                bordered
+                onKeyDown={onEnterNext}
               >
-                <Select
-                  placeholder="لطفا انتخاب کنید"
-                  size="large"
-                  bordered
-                  onKeyDown={onEnterNext}
+                <Option value="گزینه ۱">گزینه ۱</Option>
+                <Option value="گزینه ۲">گزینه ۲</Option>
+                <Option value="گزینه ۳">گزینه ۳</Option>
+              </Select>
+            </Form.Item>
+
+            <Row gutter={[32, 24]}>
+              <Col xs={24} sm={12}>
+                <Form.Item
+                  label={
+                    <span className={labelStyle}>
+                      دستگاه اجرایی&nbsp;
+                      <Tooltip title="نام دستگاه اجرایی را وارد کنید">
+                        <InfoCircleOutlined className="text-blue-600" />
+                      </Tooltip>
+                    </span>
+                  }
+                  name="executive"
+                  rules={[
+                    {
+                      required: true,
+                      message: "وارد کردن دستگاه اجرایی الزامی است",
+                    },
+                  ]}
                 >
-                  {[...Array(8)].map((_, i) => (
-                    <Option key={i + 1} value={i + 1}>
-                      {`گزینه ${i + 1}`}
-                    </Option>
-                  ))}
-                </Select>
-              </Form.Item>
-
-              <Row gutter={[32, 24]}>
-                <Col xs={24} sm={12}>
-                  <Form.Item
-                    label={
-                      <span style={labelStyle}>
-                        دستگاه اجرایی&nbsp;
-                        <Tooltip title="نام دستگاه اجرایی را وارد کنید">
-                          <InfoCircleOutlined style={{ color: "#1890ff" }} />
-                        </Tooltip>
-                      </span>
-                    }
-                    name="executive"
-                    rules={[{ required: true, message: "وارد کردن دستگاه اجرایی الزامی است" }]}
-                  >
-                    <Input
-                      placeholder="دستگاه اجرایی را وارد کنید"
-                      size="large"
-                      onKeyDown={onEnterNext}
-                    />
-                  </Form.Item>
-                </Col>
-                <Col xs={24} sm={12}>
-                  <Form.Item
-                    label={
-                      <span style={labelStyle}>
-                        موضوع تخصصی&nbsp;
-                        <Tooltip title="موضوع تخصصی گزارش را وارد کنید">
-                          <InfoCircleOutlined style={{ color: "#1890ff" }} />
-                        </Tooltip>
-                      </span>
-                    }
-                    name="subject"
-                    rules={[{ required: true, message: "وارد کردن موضوع تخصصی الزامی است" }]}
-                  >
-                    <Input
-                      placeholder="موضوع تخصصی را وارد کنید"
-                      size="large"
-                      onKeyDown={onEnterNext}
-                    />
-                  </Form.Item>
-                </Col>
-              </Row>
-
-              <div style={{ marginTop: 16, textAlign: "right" }}>
-                <Button type="primary" onClick={nextTab}>
-                  مرحله بعد
-                </Button>
-              </div>
-            </div>
-          </TabPane>
-
-          <TabPane tab="جزئیات گزارش" key="2" disabled={!validatedTabs[0]}>
-            <div style={{ padding: "24px 12px 36px 12px" }}>
-              <Row gutter={[32, 24]}>
-                <Col xs={24} sm={12}>
-                  <Form.Item
-                    label={
-                      <span style={labelStyle}>
-                        نوع گزارش&nbsp;
-                        <Tooltip title="نوع گزارش را مشخص کنید">
-                          <InfoCircleOutlined style={{ color: "#1890ff" }} />
-                        </Tooltip>
-                      </span>
-                    }
-                    name="reportType"
-                    rules={[{ required: true, message: "وارد کردن نوع گزارش الزامی است" }]}
-                  >
-                    <Input
-                      placeholder="نوع گزارش را وارد کنید"
-                      size="large"
-                      onKeyDown={onEnterNext}
-                    />
-                  </Form.Item>
-                </Col>
-                <Col xs={24} sm={12}>
-                  <Form.Item
-                    label={
-                      <span style={labelStyle}>
-                        فوریت‌های رسیدگی&nbsp;
-                        <Tooltip title="سطح فوریت رسیدگی را وارد کنید">
-                          <InfoCircleOutlined style={{ color: "#1890ff" }} />
-                        </Tooltip>
-                      </span>
-                    }
-                    name="urgency"
-                    rules={[{ required: true, message: "وارد کردن فوریت الزامی است" }]}
-                  >
-                    <Input
-                      placeholder="فوریت‌های رسیدگی را وارد کنید"
-                      size="large"
-                      onKeyDown={onEnterNext}
-                    />
-                  </Form.Item>
-                </Col>
-              </Row>
-
-              <Row gutter={[32, 24]}>
-                <Col xs={24} sm={12}>
-                  <Form.Item
-                    label={
-                      <span style={labelStyle}>
-                        برآورد ارزش فساد&nbsp;
-                        <Tooltip title="میزان برآورد شده ارزش فساد را وارد کنید">
-                          <InfoCircleOutlined style={{ color: "#1890ff" }} />
-                        </Tooltip>
-                      </span>
-                    }
-                    name="corruptionValue"
-                    rules={[{ required: true, message: "وارد کردن برآورد ارزش الزامی است" }]}
-                  >
-                    <Input
-                      placeholder="برآورد ارزش فساد را وارد کنید"
-                      size="large"
-                      onKeyDown={onEnterNext}
-                    />
-                  </Form.Item>
-                </Col>
-                <Col xs={24} sm={12}>
-                  <Form.Item
-                    label={
-                      <span style={labelStyle}>
-                        محدوده جغرافیایی تاثیر فساد&nbsp;
-                        <Tooltip title="محدوده جغرافیایی تحت تاثیر را وارد کنید">
-                          <InfoCircleOutlined style={{ color: "#1890ff" }} />
-                        </Tooltip>
-                      </span>
-                    }
-                    name="geographicRange"
-                    rules={[{ required: true, message: "وارد کردن محدوده جغرافیایی الزامی است" }]}
-                  >
-                    <Input
-                      placeholder="محدوده جغرافیایی را وارد کنید"
-                      size="large"
-                      onKeyDown={onEnterNext}
-                    />
-                  </Form.Item>
-                </Col>
-              </Row>
-
-              <div style={{ marginTop: 16, textAlign: "right" }}>
-                <Button type="default" onClick={prevTab} style={{ marginRight: 24 }}>
-                  مرحله قبل
-                </Button>
-                <Button type="primary" onClick={nextTab}>
-                  مرحله بعد
-                </Button>
-              </div>
-            </div>
-          </TabPane>
-
-          <TabPane tab="اطلاعات سازمانی" key="3" disabled={!validatedTabs[1]}>
-            <div style={{ padding: "24px 12px 36px 12px" }}>
-              <Row gutter={[32, 24]}>
-                <Col xs={24} sm={12}>
-                  <Form.Item
-                    label={
-                      <span style={labelStyle}>
-                        سطح سازمانی&nbsp;
-                        <Tooltip title="سطح سازمانی مرتبط را وارد کنید">
-                          <InfoCircleOutlined style={{ color: "#1890ff" }} />
-                        </Tooltip>
-                      </span>
-                    }
-                    name="organizationLevel"
-                    rules={[{ required: true, message: "وارد کردن سطح سازمانی الزامی است" }]}
-                  >
-                    <Input
-                      placeholder="سطح سازمانی را وارد کنید"
-                      size="large"
-                      onKeyDown={onEnterNext}
-                    />
-                  </Form.Item>
-                </Col>
-                <Col xs={24} sm={12}>
-                  <Form.Item
-                    label={
-                      <span style={labelStyle}>
-                        مشارکت در فساد&nbsp;
-                        <Tooltip title="نوع مشارکت در فساد را وارد کنید">
-                          <InfoCircleOutlined style={{ color: "#1890ff" }} />
-                        </Tooltip>
-                      </span>
-                    }
-                    name="participation"
-                    rules={[{ required: true, message: "وارد کردن نوع مشارکت الزامی است" }]}
-                  >
-                    <Input
-                      placeholder="نوع مشارکت را وارد کنید"
-                      size="large"
-                      onKeyDown={onEnterNext}
-                    />
-                  </Form.Item>
-                </Col>
-              </Row>
-
-              <div style={{ marginTop: 16, textAlign: "right" }}>
-                <Button type="default" onClick={prevTab} style={{ marginRight: 24 }}>
-                  مرحله قبل
-                </Button>
-                <Button type="primary" onClick={nextTab}>
-                  مرحله بعد
-                </Button>
-              </div>
-            </div>
-          </TabPane>
-
-          <TabPane tab="توضیحات تکمیلی" key="4" disabled={!validatedTabs[2]}>
-            <div style={{ padding: "24px 12px 36px 12px" }}>
-              <Form.Item
-                label={
-                  <span style={labelStyle}>
-                    توضیحات&nbsp;
-                    <Tooltip title={`حداکثر ${maxDescriptionLength} کاراکتر`}>
-                      <InfoCircleOutlined style={{ color: "#1890ff" }} />
-                    </Tooltip>
-                  </span>
-                }
-                name="description"
-                rules={[
-                  {
-                    required: true,
-                    message: "توضیحات را وارد کنید",
-                  },
-                  {
-                    max: maxDescriptionLength,
-                    message: `حداکثر ${maxDescriptionLength} کاراکتر مجاز است`,
-                  },
-                ]}
-              >
-                <TextArea
-                  rows={5}
-                  maxLength={maxDescriptionLength}
-                  placeholder="توضیحات را وارد کنید"
-                  showCount
-                  onKeyDown={onEnterNext}
-                />
-              </Form.Item>
-
-              <Form.Item
-                label="ضمیمه فایل (اختیاری)"
-                name="attachment"
-              >
-                <Dragger
-                  fileList={fileList}
-                  onChange={handleFileChange}
-                  beforeUpload={() => false}
-                  maxCount={1}
-                  accept=".png,.jpg,.jpeg,.pdf,.doc,.docx"
-                  style={{ padding: 12, borderRadius: 8 }}
+                  <Input
+                    placeholder="دستگاه اجرایی"
+                    size="large"
+                    onKeyDown={onEnterNext}
+                  />
+                </Form.Item>
+              </Col>
+              <Col xs={24} sm={12}>
+                <Form.Item
+                  label={
+                    <span className={labelStyle}>
+                      موضوع گزارش&nbsp;
+                      <Tooltip title="موضوع گزارش را مشخص کنید">
+                        <InfoCircleOutlined className="text-blue-600" />
+                      </Tooltip>
+                    </span>
+                  }
+                  name="subject"
+                  rules={[
+                    { required: true, message: "موضوع گزارش الزامی است" },
+                  ]}
                 >
-                  <p className="ant-upload-drag-icon">
-                    <InboxOutlined />
-                  </p>
-                  <p className="ant-upload-text">فایل خود را اینجا رها کنید یا کلیک کنید</p>
-                  <p className="ant-upload-hint">فقط یک فایل مجاز است</p>
-                </Dragger>
+                  <Input
+                    placeholder="موضوع گزارش"
+                    size="large"
+                    onKeyDown={onEnterNext}
+                  />
+                </Form.Item>
+              </Col>
+            </Row>
+          </div>
+        )}
 
-                {filePreview && (
-                  <div style={{ marginTop: 16, textAlign: "center" }}>
-                    <Image
-                      src={filePreview}
-                      alt="پیش‌نمایش فایل"
-                      style={{ maxHeight: 150, objectFit: "contain" }}
-                      preview={{ mask: <div>پیش‌نمایش فایل</div> }}
-                    />
-                  </div>
-                )}
-              </Form.Item>
+        {activeTab === "2" && (
+          <div>
+            <Row gutter={[32, 24]}>
+              <Col xs={24} sm={12}>
+                <Form.Item
+                  label={
+                    <span className={labelStyle}>
+                      نوع گزارش&nbsp;
+                      <Tooltip title="نوع گزارش را انتخاب کنید">
+                        <InfoCircleOutlined className="text-blue-600" />
+                      </Tooltip>
+                    </span>
+                  }
+                  name="reportType"
+                  rules={[
+                    { required: true, message: "نوع گزارش را انتخاب کنید" },
+                  ]}
+                >
+                  <Select
+                    placeholder="انتخاب نوع گزارش"
+                    size="large"
+                    bordered
+                    onKeyDown={onEnterNext}
+                  >
+                    <Option value="اداری">اداری</Option>
+                    <Option value="مالی">مالی</Option>
+                    <Option value="سایر">سایر</Option>
+                  </Select>
+                </Form.Item>
+              </Col>
 
-              <div style={{ marginTop: 16, textAlign: "right" }}>
-                <Button type="default" onClick={prevTab} style={{ marginRight: 24 }}>
-                  مرحله قبل
-                </Button>
-                <Button type="primary" htmlType="submit" loading={loading}>
-                  ارسال گزارش
-                </Button>
-              </div>
-            </div>
-          </TabPane>
-        </Tabs>
+              <Col xs={24} sm={12}>
+                <Form.Item
+                  label={
+                    <span className={labelStyle}>
+                      فوریت&nbsp;
+                      <Tooltip title="فوریت گزارش را انتخاب کنید">
+                        <InfoCircleOutlined className="text-blue-600" />
+                      </Tooltip>
+                    </span>
+                  }
+                  name="urgency"
+                  rules={[{ required: true, message: "فوریت را انتخاب کنید" }]}
+                >
+                  <Select
+                    placeholder="انتخاب فوریت"
+                    size="large"
+                    bordered
+                    onKeyDown={onEnterNext}
+                  >
+                    <Option value="عادی">عادی</Option>
+                    <Option value="فوری">فوری</Option>
+                  </Select>
+                </Form.Item>
+              </Col>
+
+              <Col xs={24} sm={12}>
+                <Form.Item
+                  label={
+                    <span className={labelStyle}>
+                      میزان فساد&nbsp;
+                      <Tooltip title="میزان فساد را مشخص کنید">
+                        <InfoCircleOutlined className="text-blue-600" />
+                      </Tooltip>
+                    </span>
+                  }
+                  name="corruptionValue"
+                  rules={[
+                    { required: true, message: "میزان فساد را مشخص کنید" },
+                  ]}
+                >
+                  <Select
+                    placeholder="انتخاب میزان فساد"
+                    size="large"
+                    bordered
+                    onKeyDown={onEnterNext}
+                  >
+                    <Option value="کم">کم</Option>
+                    <Option value="متوسط">متوسط</Option>
+                    <Option value="زیاد">زیاد</Option>
+                  </Select>
+                </Form.Item>
+              </Col>
+
+              <Col xs={24} sm={12}>
+                <Form.Item
+                  label={
+                    <span className={labelStyle}>
+                      دامنه جغرافیایی&nbsp;
+                      <Tooltip title="دامنه جغرافیایی را انتخاب کنید">
+                        <InfoCircleOutlined className="text-blue-600" />
+                      </Tooltip>
+                    </span>
+                  }
+                  name="geographicRange"
+                  rules={[
+                    {
+                      required: true,
+                      message: "دامنه جغرافیایی را انتخاب کنید",
+                    },
+                  ]}
+                >
+                  <Select
+                    placeholder="انتخاب دامنه جغرافیایی"
+                    size="large"
+                    bordered
+                    onKeyDown={onEnterNext}
+                  >
+                    <Option value="محلی">محلی</Option>
+                    <Option value="ملی">ملی</Option>
+                    <Option value="بین‌المللی">بین‌المللی</Option>
+                  </Select>
+                </Form.Item>
+              </Col>
+            </Row>
+          </div>
+        )}
+
+        {activeTab === "3" && (
+          <div>
+            <Row gutter={[32, 24]}>
+              <Col xs={24} sm={12}>
+                <Form.Item
+                  label={
+                    <span className={labelStyle}>
+                      سطح سازمانی&nbsp;
+                      <Tooltip title="سطح سازمانی را انتخاب کنید">
+                        <InfoCircleOutlined className="text-blue-600" />
+                      </Tooltip>
+                    </span>
+                  }
+                  name="organizationLevel"
+                  rules={[
+                    { required: true, message: "سطح سازمانی را انتخاب کنید" },
+                  ]}
+                >
+                  <Select
+                    placeholder="انتخاب سطح سازمانی"
+                    size="large"
+                    bordered
+                    onKeyDown={onEnterNext}
+                  >
+                    <Option value="سازمانی">سازمانی</Option>
+                    <Option value="مدیریتی">مدیریتی</Option>
+                    <Option value="عملیاتی">عملیاتی</Option>
+                  </Select>
+                </Form.Item>
+              </Col>
+
+              <Col xs={24} sm={12}>
+                <Form.Item
+                  label={
+                    <span className={labelStyle}>
+                      نحوه مشارکت&nbsp;
+                      <Tooltip title="نحوه مشارکت را مشخص کنید">
+                        <InfoCircleOutlined className="text-blue-600" />
+                      </Tooltip>
+                    </span>
+                  }
+                  name="participation"
+                  rules={[
+                    { required: true, message: "نحوه مشارکت را مشخص کنید" },
+                  ]}
+                >
+                  <Select
+                    placeholder="انتخاب نحوه مشارکت"
+                    size="large"
+                    bordered
+                    onKeyDown={onEnterNext}
+                  >
+                    <Option value="حضوری">حضوری</Option>
+                    <Option value="غیرحضوری">غیرحضوری</Option>
+                  </Select>
+                </Form.Item>
+              </Col>
+            </Row>
+          </div>
+        )}
+
+        {activeTab === "4" && (
+          <div>
+            <Form.Item
+              label={
+                <span className={labelStyle}>
+                  توضیحات تکمیلی&nbsp;
+                  <Tooltip title="توضیحات بیشتر خود را وارد کنید">
+                    <InfoCircleOutlined className="text-blue-600" />
+                  </Tooltip>
+                </span>
+              }
+              name="description"
+              rules={[
+                { required: true, message: "وارد کردن توضیحات الزامی است" },
+              ]}
+            >
+              <TextArea
+                rows={5}
+                maxLength={maxDescriptionLength}
+                placeholder="توضیحات خود را وارد کنید"
+                onKeyDown={onEnterNext}
+                showCount
+              />
+            </Form.Item>
+
+            <Form.Item label="فایل پیوست">
+              <Upload.Dragger
+                multiple={false}
+                beforeUpload={() => false} // جلوگیری از آپلود خودکار
+                fileList={fileList}
+                onChange={handleFileChange}
+                maxCount={1}
+                accept=".jpg,.png,.pdf,.doc,.docx"
+              >
+                <p className="ant-upload-drag-icon">
+                  <InboxOutlined />
+                </p>
+                <p className="ant-upload-text">
+                  فایل را اینجا رها کنید یا کلیک کنید
+                </p>
+                <p className="ant-upload-hint">
+                  فایل‌های jpg, png, pdf, doc قابل قبول هستند
+                </p>
+              </Upload.Dragger>
+              {filePreview && (
+                <div className="mt-3">
+                  <Image src={filePreview} alt="پیش نمایش فایل" />
+                </div>
+              )}
+            </Form.Item>
+          </div>
+        )}
+
+        {/* دکمه‌های ناوبری */}
+        <div className="flex justify-between">
+          {activeTab !== "1" && (
+            <Button size="large" onClick={prevTab}>
+              بازگشت
+            </Button>
+          )}
+
+          {activeTab !== totalSteps.toString() && (
+            <Button type="primary" size="large" onClick={nextTab}>
+              مرحله بعد
+            </Button>
+          )}
+
+          {activeTab === totalSteps.toString() && (
+            <Button
+              type="primary"
+              size="large"
+              onClick={handleShowSummaryModal}
+              loading={loading}
+            >
+              ثبت نهایی و مشاهده خلاصه
+            </Button>
+          )}
+        </div>
       </Form>
+
+      {/* مدال خلاصه گزارش */}
+      <Modal
+        title="خلاصه گزارش"
+        visible={isModalVisible}
+        onCancel={() => setIsModalVisible(false)}
+        onOk={handleConfirmSubmit}
+        okText="تایید و ارسال"
+        cancelText="بازگشت"
+        confirmLoading={loading}
+        centered
+      >
+        {summaryData ? (
+          <>
+            <p>
+              <strong>گزینه انتخاب شده:</strong> {summaryData.option || "-"}
+            </p>
+            <p>
+              <strong>دستگاه اجرایی:</strong> {summaryData.executive || "-"}
+            </p>
+            <p>
+              <strong>موضوع گزارش:</strong> {summaryData.subject || "-"}
+            </p>
+            <p>
+              <strong>نوع گزارش:</strong> {summaryData.reportType || "-"}
+            </p>
+            <p>
+              <strong>فوریت:</strong> {summaryData.urgency || "-"}
+            </p>
+            <p>
+              <strong>میزان فساد:</strong> {summaryData.corruptionValue || "-"}
+            </p>
+            <p>
+              <strong>دامنه جغرافیایی:</strong>{" "}
+              {summaryData.geographicRange || "-"}
+            </p>
+            <p>
+              <strong>سطح سازمانی:</strong>{" "}
+              {summaryData.organizationLevel || "-"}
+            </p>
+            <p>
+              <strong>نحوه مشارکت:</strong> {summaryData.participation || "-"}
+            </p>
+            <p>
+              <strong>توضیحات تکمیلی:</strong> {summaryData.description || "-"}
+            </p>
+
+            {filePreview ? (
+              <div className="mt-3">
+                <strong>پیش نمایش فایل پیوست:</strong>
+                <Image src={filePreview} alt="پیش نمایش فایل" />
+              </div>
+            ) : fileList.length > 0 ? (
+              <div className="mt-3">
+                <strong>فایل پیوست:</strong> {fileList[0].name}
+              </div>
+            ) : null}
+          </>
+        ) : (
+          <p>در حال بارگذاری...</p>
+        )}
+      </Modal>
     </div>
   );
 }
