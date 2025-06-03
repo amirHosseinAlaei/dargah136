@@ -3,9 +3,14 @@ import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import path from "path";
 import basicSsl from "@vitejs/plugin-basic-ssl";
+import { fileURLToPath } from "url";
+
+// ساخت __dirname در محیط ES Module
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export default defineConfig(({ mode }) => {
-  // Load .env files based on the current mode (e.g., development, production)
+  // بارگذاری متغیرهای محیطی
   const env = loadEnv(mode, process.cwd(), "");
 
   return {

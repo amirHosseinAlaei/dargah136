@@ -2,6 +2,7 @@ import { Form, Input, Button } from "antd";
 import { Icon } from "@iconify/react";
 import { useQuery } from "@tanstack/react-query";
 import { showCaptcha } from "../../service/Authenticate";
+import type { ValidateErrorEntity } from "rc-field-form/lib/interface";
 
 function Forget() {
   const { data, error, isLoading, refetch } = useQuery({
@@ -9,11 +10,11 @@ function Forget() {
     queryFn: showCaptcha,
   });
 
-  const onFinish = (values) => {
+  const onFinish = (values: Record<string, any>) => {
     console.log("ارسال کد تایید به:", values);
   };
 
-  const onFinishFailed = (errorInfo) => {
+  const onFinishFailed = (errorInfo: ValidateErrorEntity<Record<string, any>>) => {
     console.log("خطا در فرم:", errorInfo);
   };
 
@@ -90,7 +91,6 @@ function Forget() {
                 <Icon icon="mdi:refresh" className="text-2xl" />
               </button>
 
-              {/* ظرف عکس کپچا */}
               <div className="w-48 h-10 relative rounded-lg border border-gray-300 overflow-hidden">
                 {isLoading ? (
                   <div className="absolute inset-0 bg-white bg-opacity-70 flex items-center justify-center text-sm text-gray-600 font-semibold">

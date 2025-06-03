@@ -1,10 +1,9 @@
-import React from "react";
 import { Icon } from "@iconify/react";
 
 const icons = {
   morning: "ph:sun-fill",
   noon: "ph:sun-dim",
-  evening: "mdi:weather-sunset", // آیکون عصر اصلاح شده
+  evening: "mdi:weather-sunset",
   night: "ph:moon-stars-fill",
 };
 
@@ -22,7 +21,11 @@ const customStyles = `
 
 const getTehranHour = () => {
   const now = new Date();
-  const options = { hour: "2-digit", hour12: false, timeZone: "Asia/Tehran" };
+  const options: Intl.DateTimeFormatOptions = {
+    hour: "2-digit",
+    hour12: false,
+    timeZone: "Asia/Tehran",
+  };
   const hourStr = new Intl.DateTimeFormat("en-US", options).format(now);
   return Number(hourStr);
 };
@@ -33,22 +36,46 @@ const getGreeting = () => {
   if (hour >= 4 && hour < 12)
     return {
       text: "صبح بخیر",
-      icon: <Icon icon={icons.morning} className="text-2xl spin" style={{ color: "#facc15" }} />,
+      icon: (
+        <Icon
+          icon={icons.morning}
+          className="text-2xl spin"
+          style={{ color: "#facc15" }}
+        />
+      ),
     };
   if (hour >= 12 && hour < 16)
     return {
       text: "ظهر بخیر",
-      icon: <Icon icon={icons.noon} className="text-2xl bounce" style={{ color: "#f59e0b" }} />,
+      icon: (
+        <Icon
+          icon={icons.noon}
+          className="text-2xl bounce"
+          style={{ color: "#f59e0b" }}
+        />
+      ),
     };
   if (hour >= 16 && hour < 20)
     return {
       text: "عصر بخیر",
-      icon: <Icon icon={icons.evening} className="text-2xl subtle-bounce" style={{ color: "#fbbf24" }} />,
+      icon: (
+        <Icon
+          icon={icons.evening}
+          className="text-2xl subtle-bounce"
+          style={{ color: "#fbbf24" }}
+        />
+      ),
     };
 
   return {
     text: "شب بخیر",
-    icon: <Icon icon={icons.night} className="text-2xl sway" style={{ color: "#3b82f6" }} />,
+    icon: (
+      <Icon
+        icon={icons.night}
+        className="text-2xl sway"
+        style={{ color: "#3b82f6" }}
+      />
+    ),
   };
 };
 
@@ -57,10 +84,22 @@ const getPersianDate = () => {
   const locale = "fa-IR";
   const timeZone = "Asia/Tehran";
 
-  const weekday = new Intl.DateTimeFormat(locale, { weekday: "long", timeZone }).format(now);
-  const day = new Intl.DateTimeFormat(locale, { day: "numeric", timeZone }).format(now);
-  const month = new Intl.DateTimeFormat(locale, { month: "long", timeZone }).format(now);
-  const year = new Intl.DateTimeFormat(locale, { year: "numeric", timeZone }).format(now);
+  const weekday = new Intl.DateTimeFormat(locale, {
+    weekday: "long",
+    timeZone,
+  }).format(now);
+  const day = new Intl.DateTimeFormat(locale, {
+    day: "numeric",
+    timeZone,
+  }).format(now);
+  const month = new Intl.DateTimeFormat(locale, {
+    month: "long",
+    timeZone,
+  }).format(now);
+  const year = new Intl.DateTimeFormat(locale, {
+    year: "numeric",
+    timeZone,
+  }).format(now);
 
   return `${weekday} ${day} ${month} ${year}`;
 };
@@ -74,7 +113,9 @@ const ShowDate = () => {
       <div className="bg-white/20 backdrop-blur rounded-lg p-4 text-center max-w-sm mx-auto">
         <div className="flex items-center justify-center gap-3 mb-3">
           {greeting.icon}
-          <span className="text-white font-extrabold text-lg">{greeting.text}</span>
+          <span className="text-white font-extrabold text-lg">
+            {greeting.text}
+          </span>
         </div>
         <div className="text-white/80 text-sm leading-relaxed">
           امروز

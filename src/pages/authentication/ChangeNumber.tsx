@@ -3,17 +3,29 @@ import { Icon } from "@iconify/react";
 import { useQuery } from "@tanstack/react-query";
 import { showCaptcha } from "../../service/Authenticate";
 
+// اینترفیس کامل پاسخ کپچا
+interface CaptchaResponse {
+  dntCaptchaId: string;
+  captchaImageUrl: string;
+  dntCaptchaText: string;
+  dntCaptchaToken: string;
+}
+
 function ChangeNumber() {
-  const { data, error, isLoading, refetch } = useQuery({
+  const { data, error, isLoading, refetch } = useQuery<CaptchaResponse, Error>({
     queryKey: ["captcha"],
     queryFn: showCaptcha,
   });
 
-  const onFinish = (values) => {
+  const onFinish = (values: {
+    nationalId: string;
+    phone: string;
+    captcha: string;
+  }) => {
     console.log("ارسال کد تایید به:", values);
   };
 
-  const onFinishFailed = (errorInfo) => {
+  const onFinishFailed = (errorInfo: any) => {
     console.log("خطا در فرم:", errorInfo);
   };
 
@@ -71,7 +83,9 @@ function ChangeNumber() {
           <Form.Item
             label="کد امنیتی"
             name="captcha"
-            rules={[{ required: true, message: "لطفا کد امنیتی را وارد کنید!" }]}
+            rules={[
+              { required: true, message: "لطفا کد امنیتی را وارد کنید!" },
+            ]}
           >
             <div className="flex items-center gap-2">
               <Input

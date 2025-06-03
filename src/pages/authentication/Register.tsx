@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import type { ChangeEvent } from "react";
 import { Form, Input, Button, DatePicker } from "antd";
 import fa_IR from "antd/es/date-picker/locale/fa_IR";
 import { useNavigate } from "react-router-dom";
 import { Icon } from "@iconify/react";
 import { useQuery } from "@tanstack/react-query";
-import { showCaptcha } from "../../service/Authenticate"; // فرض بر اینکه مثل forget این سرویس داری
+import { showCaptcha } from "../../service/Authenticate";
 
 function Register() {
   const [form] = Form.useForm();
@@ -19,21 +19,31 @@ function Register() {
   const MAX_NATIONAL = 10;
   const MAX_PERSIAN = 30;
 
-  const handleNumericInput = (e, maxLen, setter, fieldName) => {
+  const handleNumericInput = (
+    e: ChangeEvent<HTMLInputElement>,
+    maxLen: number,
+    setter: (len: number) => void,
+    fieldName: string
+  ) => {
     let val = e.target.value.replace(/\D/g, "");
     if (val.length > maxLen) val = val.slice(0, maxLen);
     form.setFieldsValue({ [fieldName]: val });
     setter(val.length);
   };
 
-  const handlePersianInput = (e, maxLen, fieldName) => {
+  const handlePersianInput = (
+    e: ChangeEvent<HTMLInputElement>,
+    maxLen: number,
+    fieldName: string
+  ) => {
     let val = e.target.value.replace(/[^\u0600-\u06FF\s]/g, "");
     if (val.length > maxLen) val = val.slice(0, maxLen);
     form.setFieldsValue({ [fieldName]: val });
   };
 
-  const onFinish = (values) => {
-    if (values.birthDate) values.birthDate = values.birthDate.format("YYYY/MM/DD");
+  const onFinish = (values: Record<string, any>) => {
+    if (values.birthDate)
+      values.birthDate = values.birthDate.format("YYYY/MM/DD");
     console.log("اطلاعات ثبت‌نام:", values);
     alert("ثبت نام با موفقیت انجام شد!");
   };
@@ -102,7 +112,10 @@ function Register() {
                 label={field.label}
                 name={field.name}
                 rules={[
-                  { required: true, message: `لطفا ${field.label} را وارد کنید` },
+                  {
+                    required: true,
+                    message: `لطفا ${field.label} را وارد کنید`,
+                  },
                   {
                     pattern: /^[\u0600-\u06FF\s]{2,30}$/,
                     message: `${field.label} باید فقط حروف فارسی باشد`,
@@ -121,7 +134,9 @@ function Register() {
             <Form.Item
               label="تاریخ تولد"
               name="birthDate"
-              rules={[{ required: true, message: "لطفا تاریخ تولد را انتخاب کنید" }]}
+              rules={[
+                { required: true, message: "لطفا تاریخ تولد را انتخاب کنید" },
+              ]}
             >
               <DatePicker
                 className="w-full"
@@ -179,11 +194,13 @@ function Register() {
             </Form.Item>
           </div>
 
-          {/* کپچا حرفه‌ای */}
+          {/* کپچا */}
           <Form.Item
             label="کد امنیتی"
             name="captcha"
-            rules={[{ required: true, message: "لطفا کد امنیتی را وارد کنید!" }]}
+            rules={[
+              { required: true, message: "لطفا کد امنیتی را وارد کنید!" },
+            ]}
           >
             <div className="flex items-center gap-2">
               <Input

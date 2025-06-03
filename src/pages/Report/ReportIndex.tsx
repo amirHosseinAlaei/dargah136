@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import type { KeyboardEvent } from "react";
 import {
   Form,
   Select,
@@ -23,7 +24,17 @@ const { TextArea } = Input;
 
 const steps = [1, 2, 3, 4];
 
-const Stepper = ({ activeStep, onStepClick, validatedTabs }) => {
+type StepperProps = {
+  activeStep: string;
+  onStepClick: (step: string) => void;
+  validatedTabs: boolean[];
+};
+
+const Stepper: React.FC<StepperProps> = ({
+  activeStep,
+  onStepClick,
+  validatedTabs,
+}) => {
   return (
     <div className="flex justify-center items-center mb-6 select-none">
       {steps.map((step, idx) => {
@@ -62,26 +73,38 @@ const Stepper = ({ activeStep, onStepClick, validatedTabs }) => {
   );
 };
 
+type SummaryDataType = {
+  option: string;
+  executive: string;
+  subject: string;
+  reportType: string;
+  urgency: string;
+  corruptionValue: number;
+  geographicRange: string;
+  organizationLevel: string;
+  participation: string;
+  description: string;
+};
+
 function ReportIndex() {
   const [form] = Form.useForm();
   const maxDescriptionLength = 400;
-  const [descriptionLength, setDescriptionLength] = useState(0);
-  const [fileList, setFileList] = useState([]);
-  const [filePreview, setFilePreview] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState("1");
-  const [validatedTabs, setValidatedTabs] = useState([
+  const [descriptionLength, setDescriptionLength] = useState<number>(0);
+  const [fileList, setFileList] = useState<any[]>([]);
+  const [filePreview, setFilePreview] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [activeTab, setActiveTab] = useState<string>("1");
+  const [validatedTabs, setValidatedTabs] = useState<boolean[]>([
     false,
     false,
     false,
     false,
   ]);
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [summaryData, setSummaryData] = useState(null);
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  const [summaryData, setSummaryData] = useState<SummaryDataType | null>(null);
 
   const totalSteps = 4;
 
-  // کپچا
   const {
     data: captchaData,
     error: captchaError,
@@ -92,7 +115,7 @@ function ReportIndex() {
     queryFn: showCaptcha,
   });
 
-  const getFieldsForCurrentTab = (tabKey) => {
+  const getFieldsForCurrentTab = (tabKey: string): string[] => {
     switch (tabKey) {
       case "1":
         return ["option", "executive", "subject"];
@@ -101,7 +124,7 @@ function ReportIndex() {
       case "3":
         return ["organizationLevel", "participation"];
       case "4":
-        return ["description", "captcha"]; // اضافه کردن کپچا
+        return ["description", "captcha"];
       default:
         return [];
     }
@@ -115,8 +138,8 @@ function ReportIndex() {
       newValidatedTabs[currentIndex] = true;
       setValidatedTabs(newValidatedTabs);
 
-      const next = (parseInt(activeTab) + 1).toString();
-      if (next <= totalSteps) {
+      const next = (parseInt(activeTab, 10) + 1).toString();
+      if (parseInt(next, 10) <= totalSteps) {
         setActiveTab(next);
       }
     } catch (error) {
@@ -125,13 +148,13 @@ function ReportIndex() {
   };
 
   const prevTab = () => {
-    const prev = (parseInt(activeTab) - 1).toString();
-    if (prev >= 1) {
+    const prev = (parseInt(activeTab, 10) - 1).toString();
+    if (parseInt(prev, 10) >= 1) {
       setActiveTab(prev);
     }
   };
 
-  const onTabChange = (key) => {
+  const onTabChange = (key: string) => {
     const targetIndex = parseInt(key, 10) - 1;
     if (validatedTabs[targetIndex] || targetIndex === 0) {
       setActiveTab(key);
@@ -140,11 +163,12 @@ function ReportIndex() {
     }
   };
 
-  const handleFileChange = ({ fileList: newFileList }) => {
+  const handleFileChange = (info: { fileList: any[] }) => {
+    const newFileList = info.fileList;
     setFileList(newFileList);
 
     if (newFileList.length > 0) {
-      const file = newFileList[0].originFileObj;
+      const file = newFileList[0].originFileObj as File;
       const previewUrl = URL.createObjectURL(file);
       setFilePreview(previewUrl);
     } else {
@@ -156,7 +180,7 @@ function ReportIndex() {
     try {
       await form.validateFields();
 
-      const values = form.getFieldsValue(true);
+      const values = form.getFieldsValue(true) as SummaryDataType;
       setSummaryData(values);
       setIsModalVisible(true);
     } catch (error) {
@@ -183,35 +207,49 @@ function ReportIndex() {
 
   const labelStyle = "inline-flex items-center gap-1.5 font-medium";
 
-  const onValuesChange = (changedValues) => {
+  const onValuesChange = (changedValues: { [key: string]: any }) => {
     if (changedValues.description !== undefined) {
       setDescriptionLength(changedValues.description.length);
     }
   };
 
-  const onEnterNext = (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      const formElements = Array.from(
-        e.target.form.querySelectorAll("input, textarea, select, button")
-      ).filter((el) => !el.disabled && el.offsetParent !== null);
+  // اصلاح کست e.target و تایپ دقیق‌تر
+const onEnterNext = (e: KeyboardEvent<HTMLElement>) => {
+  if (e.key === "Enter") {
+    e.preventDefault();
 
-      const index = formElements.indexOf(e.target);
-      if (index > -1 && index < formElements.length - 1) {
-        formElements[index + 1].focus();
-      }
+    const target = e.target as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
+    const formElement = target.form;
+
+    if (!formElement) return;
+
+    const formElements = Array.from(
+      formElement.querySelectorAll("input, textarea, select, button")
+    ).filter(
+      (el) =>
+        !(el as HTMLInputElement).disabled &&
+        (el as HTMLElement).offsetParent !== null
+    );
+
+    const index = formElements.indexOf(target);
+    if (index > -1 && index < formElements.length - 1) {
+      (formElements[index + 1] as HTMLElement).focus();
     }
-  };
+  }
+};
+
 
   return (
-    <div className="max-w-3xl mx-auto mt-10 p-6  rounded-lg ">
-      <h2 className="text-center mb-6 text-black font-black  text-2xl">
+    <div className="max-w-3xl mx-auto mt-10 p-6 rounded-lg">
+      <h2 className="text-center mb-6 text-black font-black text-2xl">
         فرم گزارش فساد
       </h2>
 
-      <div className="text-center mb-5 font-semibold text-gray-700">
+      <div className="text-center mb-2 font-semibold text-gray-700">
         مرحله {activeTab} از {totalSteps}
       </div>
+
+      {/* نمایش طول توضیحات */}
 
       <Form
         form={form}
@@ -535,7 +573,7 @@ function ReportIndex() {
               label="ضمیمه گزارش"
               name="file"
               valuePropName="fileList"
-              getValueFromEvent={(e) => e && e.fileList}
+              getValueFromEvent={(e) => (e && e.fileList) || []}
               rules={[
                 {
                   validator: (_, value) => {
@@ -552,7 +590,7 @@ function ReportIndex() {
                       "image/jpeg",
                       "image/png",
                     ];
-                    const isValidType = value.every((file) =>
+                    const isValidType = value.every((file: any) =>
                       allowedTypes.includes(file.type)
                     );
                     if (!isValidType) {
@@ -565,6 +603,10 @@ function ReportIndex() {
                 },
               ]}
             >
+              <div className="text-center mb-6 text-gray-500">
+                تعداد کاراکترهای توضیحات: {descriptionLength} /{" "}
+                {maxDescriptionLength}
+              </div>
               <Upload.Dragger
                 name="file"
                 multiple={false}
@@ -572,7 +614,7 @@ function ReportIndex() {
                 fileList={fileList}
                 onChange={handleFileChange}
                 maxCount={1}
-                beforeUpload={() => false} // جلوگیری از آپلود خودکار
+                beforeUpload={() => false}
               >
                 <p className="ant-upload-drag-icon">
                   <InboxOutlined />
@@ -586,7 +628,6 @@ function ReportIndex() {
               </Upload.Dragger>
             </Form.Item>
 
-            {/* پیش‌نمایش فایل */}
             {filePreview && (
               <div className="mb-4 flex justify-center">
                 <Image
@@ -597,50 +638,50 @@ function ReportIndex() {
               </div>
             )}
 
-            {/* کپچا */}
-        
-        <Form.Item
-  label="کد امنیتی"
-  name="captcha"
-  rules={[{ required: true, message: "لطفا کد امنیتی را وارد کنید!" }]}
->
-  <div className="flex items-center gap-2">
-    <Input
-      placeholder="کد امنیتی را وارد کنید"
-      className="!w-32 h-10 rounded-lg border border-gray-300 py-2 px-3 text-center"
-      maxLength={5}
-      autoComplete="off"
-    />
+            <Form.Item
+              label="کد امنیتی"
+              name="captcha"
+              rules={[
+                { required: true, message: "لطفا کد امنیتی را وارد کنید!" },
+              ]}
+            >
+              <div className="flex items-center gap-2">
+                <Input
+                  placeholder="کد امنیتی را وارد کنید"
+                  className="!w-32 h-10 rounded-lg border border-gray-300 py-2 px-3 text-center"
+                  maxLength={5}
+                  autoComplete="off"
+                />
 
-    <button
-      type="button"
-      className="h-10 w-10 rounded-lg text-blue-600 hover:text-blue-700 bg-transparent border-none p-0 flex items-center justify-center"
-      onClick={() => refetchCaptcha()}
-    >
-      <Icon icon="mdi:refresh" width="24" height="24" />
-    </button>
+                <button
+                  type="button"
+                  className="h-10 w-10 rounded-lg text-blue-600 hover:text-blue-700 bg-transparent border-none p-0 flex items-center justify-center"
+                  onClick={() => refetchCaptcha()}
+                >
+                  <Icon icon="mdi:refresh" width="24" height="24" />
+                </button>
 
-    <div className="h-10 flex items-center justify-center rounded-lg border border-gray-300 bg-gray-50 text-sm text-gray-500">
-      {captchaLoading ? (
-        "در حال دریافت کد امنیتی..."
-      ) : captchaError ? (
-        "خطا در دریافت کد امنیتی"
-      ) : captchaData?.captchaImageUrl ? (
-        <img
-          src={captchaData.captchaImageUrl}
-          alt="کد امنیتی"
-          className="h-full !object-fill rounded-lg"
-        />
-      ) : (
-        <img
-          src="https://via.placeholder.com/150x40?text=CAPTCHA"
-          alt="کد امنیتی"
-          className="w-full h-full object-cover rounded-lg"
-        />
-      )}
-    </div>
-  </div>
-</Form.Item>
+                <div className="h-10 flex items-center justify-center rounded-lg border border-gray-300 bg-gray-50 text-sm text-gray-500">
+                  {captchaLoading ? (
+                    "در حال دریافت کد امنیتی..."
+                  ) : captchaError ? (
+                    "خطا در دریافت کد امنیتی"
+                  ) : captchaData?.captchaImageUrl ? (
+                    <img
+                      src={captchaData.captchaImageUrl}
+                      alt="کد امنیتی"
+                      className="h-full !object-fill rounded-lg"
+                    />
+                  ) : (
+                    <img
+                      src="https://via.placeholder.com/150x40?text=CAPTCHA"
+                      alt="کد امنیتی"
+                      className="w-full h-full object-cover rounded-lg"
+                    />
+                  )}
+                </div>
+              </div>
+            </Form.Item>
           </div>
         )}
 
@@ -666,7 +707,8 @@ function ReportIndex() {
             )}
 
             {activeTab === totalSteps.toString() && (
-              <Button className="!bg-[#00598A] duration-300 hover:!duration-300 hover:!bg-[#004c8a]"
+              <Button
+                className="!bg-[#00598A] duration-300 hover:!duration-300 hover:!bg-[#004c8a]"
                 size="large"
                 type="primary"
                 loading={loading}

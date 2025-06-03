@@ -3,6 +3,7 @@ import { Icon } from "@iconify/react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { showCaptcha } from "../../service/Authenticate";
+import type { ValidateErrorEntity } from "rc-field-form/lib/interface";
 
 function Login() {
   const nav = useNavigate();
@@ -13,12 +14,16 @@ function Login() {
     queryFn: showCaptcha,
   });
 
-  const onFinish = (values) => {
+  // تایپ مقادیر فرم: یک شیء با کلید رشته و مقدار any (می‌تونی دقیق‌ترش هم بکنیم)
+  const onFinish = (values: Record<string, any>) => {
     console.log("Success:", values);
     // اینجا ارسال اطلاعات ورود یا هر عملیاتی که میخواید انجام بدید
   };
 
-  const onFinishFailed = (errorInfo) => {
+  // تایپ خطاهای اعتبارسنجی فرم
+  const onFinishFailed = (
+    errorInfo: ValidateErrorEntity<Record<string, any>>
+  ) => {
     console.log("Failed:", errorInfo);
   };
 
@@ -101,9 +106,13 @@ function Login() {
 
             {/* کپچا */}
             <Form.Item
-              label={<span className="font-semibold text-gray-700">کد امنیتی</span>}
+              label={
+                <span className="font-semibold text-gray-700">کد امنیتی</span>
+              }
               name="captcha"
-              rules={[{ required: true, message: "لطفا کد امنیتی را وارد کنید!" }]}
+              rules={[
+                { required: true, message: "لطفا کد امنیتی را وارد کنید!" },
+              ]}
             >
               <div className="flex items-center gap-2">
                 <Input

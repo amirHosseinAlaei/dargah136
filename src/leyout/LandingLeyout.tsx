@@ -3,7 +3,7 @@ import ShowDate from "../utils/ShowDate";
 import SvgLanding from "../utils/SvgLanding";
 import { Outlet, useNavigate } from "react-router-dom";
 import { Icon } from "@iconify/react";
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 
 const DashboardLayout = () => {
   const navigate = useNavigate();

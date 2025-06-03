@@ -9,7 +9,11 @@ const weekDays = [
 ];
 
 // تبدیل تاریخ میلادی به شمسی (تقویم جلالی)
-export function toJalali(gy, gm, gd) {
+export function toJalali(
+  gy: number,
+  gm: number,
+  gd: number
+): [number, number, number] {
   let g_d_m = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
   let jy = gy <= 1600 ? 0 : 979;
   gy -= gy <= 1600 ? 621 : 1600;
@@ -41,7 +45,7 @@ export function toJalali(gy, gm, gd) {
   return [jy, jm, jd];
 }
 
-export function getPersianDateString(date = new Date()) {
+export function getPersianDateString(date = new Date()): string {
   const gy = date.getFullYear();
   const gm = date.getMonth() + 1;
   const gd = date.getDate();

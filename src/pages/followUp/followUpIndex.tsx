@@ -1,7 +1,7 @@
 import { Form, Input, Button } from "antd";
 import { Icon } from "@iconify/react";
 import { useQuery } from "@tanstack/react-query";
-import { showCaptcha } from "../../service/Authenticate"; // اطمینان از موجود بودن این سرویس
+import { showCaptcha } from "../../service/Authenticate";
 
 function FollowUpIndex() {
   const { data, error, isLoading, refetch } = useQuery({
@@ -9,11 +9,11 @@ function FollowUpIndex() {
     queryFn: showCaptcha,
   });
 
-  const onFinish = (values) => {
+  const onFinish = (values: Record<string, any>) => {
     console.log("اطلاعات ارسال شد:", values);
   };
 
-  const onFinishFailed = (errorInfo) => {
+  const onFinishFailed = (errorInfo: any) => {
     console.log("خطا در فرم:", errorInfo);
   };
 
