@@ -22,8 +22,17 @@ function FollowUpIndex() {
       className="max-w-md w-full mx-auto p-6 bg-white rounded-2xl shadow-md"
       style={{ maxHeight: "80vh", overflowY: "auto" }}
     >
-      <h2 className="font-extrabold text-slate-700 text-2xl mb-6 text-center">
-        پیگیری سفارش
+
+
+<div className=" mt-1   flex justify-center items-center">
+<img src="https://136.bazresi.ir/dargah/assets/img/logo.e711fe7c.svg" className="size-36" />
+
+</div>
+<br />
+
+
+      <h2 className="font-black text-slate-700 lg:text-2xl mb-6 text-center">
+         پیگیری گزارش  فساد
       </h2>
 
       {error && (

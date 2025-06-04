@@ -125,7 +125,7 @@ function Login() {
                   className="h-10 rounded-lg text-blue-600 hover:text-blue-700 bg-transparent border-none p-0 flex items-center justify-center"
                   onClick={() => refetch()}
                 >
-                  <Icon icon="mdi:refresh" className="text-2xl" />
+                  <Icon   icon="mdi:refresh" className="!cursor-pointer text-2xl" />
                 </button>
                 <div className="!w-48 h-10 flex items-center justify-center rounded-lg border border-gray-300 bg-gray-50 text-sm text-gray-500">
                   {isLoading ? (

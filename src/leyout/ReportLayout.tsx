@@ -1,8 +1,5 @@
 import { Outlet, useNavigate } from "react-router-dom";
-import { Layout, Button } from "antd";
 import { Icon } from "@iconify/react";
-
-const { Header, Content, Footer } = Layout;
 
 function ReportLayout() {
   const navigate = useNavigate();
@@ -12,30 +9,35 @@ function ReportLayout() {
   };
 
   return (
-    <Layout className="h-screen bg-gray-100 font-sans">
-      <Header className="!bg-white shadow-md px-8 flex items-center justify-between">
-        <h1 className="text-xl font-bold text-gray-800">سامانه گزارش فساد</h1>
-        <Button
-          className="!bg-[#00598A] duration-300 hover:!duration-300 hover:!bg-[#004c8a] !p-4 "
-          type="primary"
+    <div className="min-h-screen flex flex-col bg-gray-100 font-sans">
+      {/* Header */}
+      <header className="bg-white shadow-md px-4 lg:px-8 py-4 flex items-center justify-between">
+
+        <div  className="flex  items-center justify-center gap-3">
+
+          <img className="size-12 lg:size-14 shadow-lg rounded-lg " src="	https://136.bazresi.ir/dargah/assets/img/Logo136.f920000b.png" alt="" />
+        <h1 className="lg:text-xl font-bold flex gap-1 text-gray-800">  سامانه گزارش فساد <span className="hidden md:block">سازمان بازرسی کل کشور</span></h1>
+
+
+        </div>
+        <button
+          className="flex items-center gap-1 lg:gap-2 bg-[#00598A] hover:bg-[#004c8a] text-white lg:font-medium rounded-lg px-2 lg:px-4 py-2 transition-colors duration-300"
           onClick={handleBack}
         >
-          بازگشت به داشبورد
-          <Icon
-            icon="mdi:arrow-left"
-            style={{ marginLeft: 8, fontSize: "16px" }}
-          />
-        </Button>
-      </Header>
+          بازگشت  <div className="hidden lg:block">
+            به داشبورد
+          </div>
+          <Icon icon="mdi:arrow-left" className="text-lg" />
+        </button>
+      </header>
 
-      <Content className="py-10 px-4">
+      {/* Content */}
+      <main className="flex-1 py-10 px-4">
         <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-lg px-6 py-8">
           <Outlet />
         </div>
-      </Content>
-
-      <Footer className="text-center  text-gray-400 text-sm"></Footer>
-    </Layout>
+      </main>
+    </div>
   );
 }
 

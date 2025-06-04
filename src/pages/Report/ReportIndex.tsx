@@ -92,7 +92,10 @@ function ReportIndex() {
   const [descriptionLength, setDescriptionLength] = useState<number>(0);
   const [fileList, setFileList] = useState<any[]>([]);
   const [filePreview, setFilePreview] = useState<string | null>(null);
+  const [uploadPercent, setUploadPercent] = useState<number>(0);
+  const [uploading, setUploading] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [loadingNext, setLoadingNext] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<string>("1");
   const [validatedTabs, setValidatedTabs] = useState<boolean[]>([
     false,
@@ -131,6 +134,7 @@ function ReportIndex() {
   };
 
   const nextTab = async () => {
+    setLoadingNext(true);
     try {
       await form.validateFields(getFieldsForCurrentTab(activeTab));
       const currentIndex = parseInt(activeTab, 10) - 1;
@@ -145,6 +149,7 @@ function ReportIndex() {
     } catch (error) {
       message.error("لطفا فیلدهای اجباری را کامل کنید.");
     }
+    setLoadingNext(false);
   };
 
   const prevTab = () => {
@@ -171,8 +176,23 @@ function ReportIndex() {
       const file = newFileList[0].originFileObj as File;
       const previewUrl = URL.createObjectURL(file);
       setFilePreview(previewUrl);
+
+      // شبیه‌سازی آپلود
+      setUploading(true);
+      setUploadPercent(0);
+      let percent = 0;
+      const interval = setInterval(() => {
+        percent += 10;
+        setUploadPercent(percent);
+        if (percent >= 100) {
+          clearInterval(interval);
+          setUploading(false);
+        }
+      }, 100);
     } else {
       setFilePreview(null);
+      setUploadPercent(0);
+      setUploading(false);
     }
   };
 
@@ -202,6 +222,8 @@ function ReportIndex() {
       setActiveTab("1");
       setValidatedTabs([false, false, false, false]);
       setSummaryData(null);
+      setUploadPercent(0);
+      setUploading(false);
     }, 1500);
   };
 
@@ -213,43 +235,46 @@ function ReportIndex() {
     }
   };
 
-  // اصلاح کست e.target و تایپ دقیق‌تر
-const onEnterNext = (e: KeyboardEvent<HTMLElement>) => {
-  if (e.key === "Enter") {
-    e.preventDefault();
+  const onEnterNext = (e: KeyboardEvent<HTMLElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
 
-    const target = e.target as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
-    const formElement = target.form;
+      const target = e.target as
+        | HTMLInputElement
+        | HTMLTextAreaElement
+        | HTMLSelectElement;
+      const formElement = target.form;
 
-    if (!formElement) return;
+      if (!formElement) return;
 
-    const formElements = Array.from(
-      formElement.querySelectorAll("input, textarea, select, button")
-    ).filter(
-      (el) =>
-        !(el as HTMLInputElement).disabled &&
-        (el as HTMLElement).offsetParent !== null
-    );
+      const formElements = Array.from(
+        formElement.querySelectorAll("input, textarea, select, button")
+      ).filter(
+        (el) =>
+          !(el as HTMLInputElement).disabled &&
+          (el as HTMLElement).offsetParent !== null
+      );
 
-    const index = formElements.indexOf(target);
-    if (index > -1 && index < formElements.length - 1) {
-      (formElements[index + 1] as HTMLElement).focus();
+      const index = formElements.indexOf(target);
+      if (index > -1 && index < formElements.length - 1) {
+        (formElements[index + 1] as HTMLElement).focus();
+      }
     }
-  }
-};
-
+  };
 
   return (
-    <div className="max-w-3xl mx-auto mt-10 p-6 rounded-lg">
-      <h2 className="text-center mb-6 text-black font-black text-2xl">
+    <div className="max-w-3xl mx-auto  p-6 rounded-lg">
+      <div className=" -mt-6   flex justify-center items-center">
+        <img
+          src="https://136.bazresi.ir/dargah/assets/img/logo.e711fe7c.svg"
+          className="size-36"
+        />
+      </div>
+      <br />
+
+      <h2 className="font-black text-slate-700 lg:text-2xl mb-6 text-center">
         فرم گزارش فساد
       </h2>
-
-      <div className="text-center mb-2 font-semibold text-gray-700">
-        مرحله {activeTab} از {totalSteps}
-      </div>
-
-      {/* نمایش طول توضیحات */}
 
       <Form
         form={form}
@@ -570,7 +595,6 @@ const onEnterNext = (e: KeyboardEvent<HTMLElement>) => {
             </Form.Item>
 
             <Form.Item
-              label="ضمیمه گزارش"
               name="file"
               valuePropName="fileList"
               getValueFromEvent={(e) => (e && e.fileList) || []}
@@ -603,10 +627,29 @@ const onEnterNext = (e: KeyboardEvent<HTMLElement>) => {
                 },
               ]}
             >
-              <div className="text-center mb-6 text-gray-500">
-                تعداد کاراکترهای توضیحات: {descriptionLength} /{" "}
-                {maxDescriptionLength}
+              <div className="text-center  flex justify-between    text-gray-500">
+                <div>ضمیمه گزارش</div>
+                <div>
+                  تعداد کاراکترهای توضیحات:
+                  <span
+                    style={{
+                      color:
+                        descriptionLength >= maxDescriptionLength
+                          ? "red"
+                          : "inherit",
+                      fontWeight:
+                        descriptionLength >= maxDescriptionLength
+                          ? "bold"
+                          : "normal",
+                    }}
+                  >
+                    {" "}
+                    {descriptionLength} / {maxDescriptionLength}
+                  </span>
+                </div>
               </div>
+
+              <br />
               <Upload.Dragger
                 name="file"
                 multiple={false}
@@ -626,29 +669,45 @@ const onEnterNext = (e: KeyboardEvent<HTMLElement>) => {
                   فقط فایل‌های PDF، JPG و PNG مجاز است.
                 </p>
               </Upload.Dragger>
+              {/* نوار پیشرفت */}
+              {uploading && (
+                <div className="w-full my-2">
+                  <div className="w-full bg-blue-100 rounded h-3 overflow-hidden">
+                    <div
+                      className="bg-blue-500 h-3 transition-all"
+                      style={{ width: `${uploadPercent}%` }}
+                    />
+                  </div>
+                  <div className="text-xs text-blue-700 text-center mt-1">
+                    {uploadPercent}%
+                  </div>
+                </div>
+              )}
             </Form.Item>
 
-            {filePreview && (
-              <div className="mb-4 flex justify-center">
-                <Image
-                  src={filePreview}
-                  alt="پیش نمایش فایل"
-                  style={{ maxHeight: 200 }}
-                />
-              </div>
-            )}
+       {filePreview && (
+  <div className="mb-4 flex justify-center">
+    <Image
+      src={filePreview}
+      alt="پیش نمایش فایل"
+      style={{ maxHeight: 100 }}
+    />
+  </div>
+)}
+
 
             <Form.Item
+              className=" "
               label="کد امنیتی"
               name="captcha"
               rules={[
                 { required: true, message: "لطفا کد امنیتی را وارد کنید!" },
               ]}
             >
-              <div className="flex items-center gap-2">
+              <div className="flex   items-center gap-2">
                 <Input
                   placeholder="کد امنیتی را وارد کنید"
-                  className="!w-32 h-10 rounded-lg border border-gray-300 py-2 px-3 text-center"
+                  className=" h-10 rounded-lg border border-gray-300 py-2 px-3 text-center"
                   maxLength={5}
                   autoComplete="off"
                 />
@@ -658,7 +717,12 @@ const onEnterNext = (e: KeyboardEvent<HTMLElement>) => {
                   className="h-10 w-10 rounded-lg text-blue-600 hover:text-blue-700 bg-transparent border-none p-0 flex items-center justify-center"
                   onClick={() => refetchCaptcha()}
                 >
-                  <Icon icon="mdi:refresh" width="24" height="24" />
+                  <Icon
+                    className="cursor-pointer"
+                    icon="mdi:refresh"
+                    width="24"
+                    height="24"
+                  />
                 </button>
 
                 <div className="h-10 flex items-center justify-center rounded-lg border border-gray-300 bg-gray-50 text-sm text-gray-500">
@@ -700,6 +764,7 @@ const onEnterNext = (e: KeyboardEvent<HTMLElement>) => {
                 className="!bg-[#00598A] duration-300 hover:!duration-300 hover:!bg-[#004c8a]"
                 size="large"
                 type="primary"
+                loading={loadingNext}
                 onClick={nextTab}
               >
                 بعدی

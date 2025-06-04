@@ -215,7 +215,7 @@ function Register() {
                 className="h-10 rounded-lg text-blue-600 hover:text-blue-700 bg-transparent border-none p-0 flex items-center justify-center"
                 onClick={() => refetch()}
               >
-                <Icon icon="mdi:refresh" className="text-2xl" />
+                <Icon icon="mdi:refresh" className="text-2xl cursor-pointer" />
               </button>
 
               <div className="flex-1 h-10 relative rounded-lg border border-gray-300 overflow-hidden">
