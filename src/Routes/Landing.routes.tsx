@@ -1,6 +1,6 @@
 import { lazy, Suspense } from "react";
 import { Navigate } from "react-router-dom";
-import LayoutLoading from "../components/commoen/Loading/LayoutLoading";
+import LayoutLoading from "../components/commoen/Loading/LandingLayoutLoading";
 import ContentLoading from "../components/commoen/Loading/ContentLoading";
 
 // تابع delay برای ایجاد تاخیر مصنوعی

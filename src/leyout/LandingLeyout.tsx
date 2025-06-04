@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-import { Button, Dropdown, Menu } from "antd";
+import { Button, Dropdown } from "antd";
 import ShowDate from "../utils/ShowDate";
 import SvgLanding from "../utils/SvgLanding";
 import { Outlet, useNavigate } from "react-router-dom";
 import { Icon } from "@iconify/react";
-
-// تعریف نوع داده برای اکشن‌ها
+// ts
 interface Action {
   key: string;
   label: string;
@@ -14,8 +13,7 @@ interface Action {
   path: string;
   ariaLabel: string;
 }
-
-// لیست اکشن‌ها
+//  actions (Btns)
 const ACTIONS: Action[] = [
   {
     key: "register",
@@ -36,12 +34,10 @@ const ACTIONS: Action[] = [
     ariaLabel: "ورود به حساب",
   },
 ];
-
 const DashboardLayout: React.FC = () => {
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  // تابع رندر دکمه‌های اکشن
+  //
   const renderActionButton = ({
     label,
     icon,
@@ -63,18 +59,6 @@ const DashboardLayout: React.FC = () => {
       {label}
     </Button>
   );
-
-  // منوی موبایل
-  const mobileMenu = (
-    <Menu className="!border-0 !shadow-xl flex flex-col justify-center items-center !rounded-xl">
-      {ACTIONS.map((action) => (
-        <Menu.Item key={action.key} className="!p-0 !m-1">
-          {renderActionButton(action)}
-        </Menu.Item>
-      ))}
-    </Menu>
-  );
-
   return (
     <>
       {/* Navbar */}
@@ -103,9 +87,15 @@ const DashboardLayout: React.FC = () => {
             </div>
             {/* Mobile Menu */}
             <div className="lg:hidden flex items-center gap-3">
-              <span className="text-slate-600 text-sm">کاربر مهمان</span>
+              <span className="text-slate-600  text-sm">کاربر مهمان</span>
               <Dropdown
-                overlay={mobileMenu}
+                menu={{
+                  items: ACTIONS.map((action) => ({
+                    key: action.key,
+                    label: renderActionButton(action),
+                    className: "  !flex justify-center items-center ",
+                  })),
+                }}
                 trigger={["click"]}
                 placement="bottomRight"
                 arrow={{ pointAtCenter: true }}
@@ -127,7 +117,6 @@ const DashboardLayout: React.FC = () => {
           </div>
         </div>
       </div>
-
       {/* Main Content with Background */}
       <div className="relative pt-20 min-h-screen overflow-hidden">
         {/* Desktop Background */}
@@ -137,7 +126,7 @@ const DashboardLayout: React.FC = () => {
           aria-hidden="true"
         >
           <div className="absolute inset-0 bg-gradient-to-br from-blue-900/10 via-transparent to-slate-800/10"></div>
-          {/* خطوط تزئینی */}
+          {/*  line */}
           <div className="absolute inset-0">
             <div className="absolute top-12 left-0 w-48 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent"></div>
             <div className="absolute top-28 right-0 w-32 h-px bg-gradient-to-l from-transparent via-white/12 to-transparent"></div>
@@ -149,7 +138,7 @@ const DashboardLayout: React.FC = () => {
             <div className="absolute top-32 right-24 w-6 h-6 border border-white/6 rounded rotate-12"></div>
             <div className="absolute bottom-20 left-1/3 w-4 h-4 border border-white/5 rounded-sm rotate-45"></div>
           </div>
-          {/* هدر */}
+          {/* header */}
           <div className="absolute top-8 left-1/2 transform -translate-x-1/2">
             <div className="flex items-center gap-3 text-white/75 text-sm">
               <div className="w-1.5 h-1.5 bg-white/40 rounded-full"></div>
@@ -160,7 +149,7 @@ const DashboardLayout: React.FC = () => {
             </div>
           </div>
         </div>
-        {/* تصویر پس‌زمینه پایین دسکتاپ */}
+        {/* bg-img    */}
         <div
           className="absolute bottom-0 left-0 w-full bg-cover bg-center hidden lg:block z-0"
           style={{
@@ -220,5 +209,4 @@ const DashboardLayout: React.FC = () => {
     </>
   );
 };
-
 export default DashboardLayout;

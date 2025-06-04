@@ -4,7 +4,9 @@ import FollowUpIndexSkeleton from "../components/commoen/Loading/FllowUp";
 
 const FollowUpIndex = lazy(() => import("../pages/followUp/followUpIndex"));
 
-const Suspenswrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const Suspenswrapper: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   return <Suspense fallback={<FollowUpIndexSkeleton />}>{children}</Suspense>;
 };
 
