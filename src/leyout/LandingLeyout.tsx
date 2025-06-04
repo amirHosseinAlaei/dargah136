@@ -1,34 +1,62 @@
+import React, { useState } from "react";
 import { Button, Dropdown, Menu } from "antd";
 import ShowDate from "../utils/ShowDate";
 import SvgLanding from "../utils/SvgLanding";
 import { Outlet, useNavigate } from "react-router-dom";
 import { Icon } from "@iconify/react";
-import  { useEffect, useState } from "react";
 
-const DashboardLayout = () => {
+// تعریف نوع داده برای اکشن‌ها
+interface Action {
+  key: string;
+  label: string;
+  icon: string;
+  colorClass: string;
+  path: string;
+  ariaLabel: string;
+}
+
+// لیست اکشن‌ها
+const ACTIONS: Action[] = [
+  {
+    key: "register",
+    label: "ثبت نام شهروند",
+    icon: "mdi:account-plus",
+    colorClass:
+      "!bg-blue-700 hover:!bg-blue-800 lg:!bg-blue-700/85 lg:hover:!bg-blue-800",
+    path: "/user2/register",
+    ariaLabel: "ثبت نام شهروند",
+  },
+  {
+    key: "login",
+    label: "ورود به حساب",
+    icon: "mdi:login",
+    colorClass:
+      "!bg-slate-600 hover:!bg-slate-700 lg:!bg-sky-800 lg:hover:!bg-sky-900",
+    path: "/user2/login",
+    ariaLabel: "ورود به حساب",
+  },
+];
+
+const DashboardLayout: React.FC = () => {
   const navigate = useNavigate();
-
-  // کنترل باز/بسته بودن Dropdown موبایل
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // تابع برای رندر دکمه‌ها (تکرار کمتر)
+  // تابع رندر دکمه‌های اکشن
   const renderActionButton = ({
     label,
     icon,
     colorClass,
-    onClick,
+    path,
     ariaLabel,
-  }: {
-    label: string;
-    icon: string;
-    colorClass: string;
-    onClick: () => void;
-    ariaLabel: string;
-  }) => (
+  }: Action) => (
     <Button
+      key={label}
       type="text"
       className={`${colorClass} !text-white !border-0 !rounded-lg !px-6 !py-3.5 !h-auto !font-medium !transition-all !duration-200 !shadow-sm flex items-center gap-2`}
-      onClick={onClick}
+      onClick={() => {
+        setMobileMenuOpen(false);
+        navigate(path);
+      }}
       aria-label={ariaLabel}
     >
       <Icon icon={icon} className="text-lg" />
@@ -39,55 +67,20 @@ const DashboardLayout = () => {
   // منوی موبایل
   const mobileMenu = (
     <Menu className="!border-0 !shadow-xl flex flex-col justify-center items-center !rounded-xl">
-      <Menu.Item key="register" className="!p-0 !m-1">
-        {renderActionButton({
-          label: "ثبت نام شهروند",
-          icon: "mdi:account-plus",
-          colorClass: "!bg-blue-700 hover:!bg-blue-800",
-          onClick: () => {
-            setMobileMenuOpen(false);
-            navigate("/user2/register");
-          },
-          ariaLabel: "ثبت نام شهروند",
-        })}
-      </Menu.Item>
-      <Menu.Item key="login" className="!p-0 !m-1">
-        {renderActionButton({
-          label: "ورود به حساب",
-          icon: "mdi:login",
-          colorClass: "!bg-slate-600 hover:!bg-slate-700",
-          onClick: () => {
-            setMobileMenuOpen(false);
-            navigate("/user2/login");
-          },
-          ariaLabel: "ورود به حساب",
-        })}
-      </Menu.Item>
+      {ACTIONS.map((action) => (
+        <Menu.Item key={action.key} className="!p-0 !m-1">
+          {renderActionButton(action)}
+        </Menu.Item>
+      ))}
     </Menu>
   );
-
-  // بستن Dropdown در زمان تغییر سایز به دسکتاپ (lg به بالا)
-  useEffect(() => {
-    const handleResize = () => {
-      // اگر وارد دسکتاپ شدیم، منو را ببند
-      if (window.innerWidth >= 1024) {
-        setMobileMenuOpen(false);
-      }
-    };
-
-    window.addEventListener("resize", handleResize);
-    // اجرای اولیه هنگام بارگذاری
-    handleResize();
-
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
 
   return (
     <>
       {/* Navbar */}
       <div className="bg-white/95 backdrop-blur-md border-b border-gray-100 fixed top-0 left-0 w-full z-50 shadow-sm">
         <div className="max-w-7xl mx-auto px-6 py-1.5">
-          <div className="flex justify-between  mt-1.5 items-center">
+          <div className="flex justify-between mt-1.5 items-center">
             {/* Logo Section */}
             <div className="flex items-center gap-4">
               <div className="w-16 h-12 shadow-lg rounded-xl flex items-center justify-center">
@@ -106,20 +99,7 @@ const DashboardLayout = () => {
             </div>
             {/* Desktop Actions */}
             <div className="hidden lg:flex items-center gap-3">
-              {renderActionButton({
-                label: "ثبت نام شهروند",
-                icon: "mdi:account-plus",
-                colorClass: "!bg-blue-700/85 hover:!bg-blue-800",
-                onClick: () => navigate("/user2/register"),
-                ariaLabel: "ثبت نام شهروند",
-              })}
-              {renderActionButton({
-                label: "ورود به حساب",
-                icon: "mdi:login",
-                colorClass: "!bg-sky-800 hover:!bg-sky-900",
-                onClick: () => navigate("/user2/login"),
-                ariaLabel: "ورود به حساب",
-              })}
+              {ACTIONS.map(renderActionButton)}
             </div>
             {/* Mobile Menu */}
             <div className="lg:hidden flex items-center gap-3">
@@ -191,42 +171,39 @@ const DashboardLayout = () => {
           aria-hidden="true"
         ></div>
         {/* Desktop Layout */}
-        <div className="hidden lg:block relative z-10">
-          <div className="max-w-7xl mx-auto px-6 py-8">
+        <div className="hidden lg:block  relative z-10">
+          <div className="w-full flex  justify-center px-6 py-8">
             <div
-              className="bg-white   rounded-2xl shadow-lg overflow-hidden"
+              className="bg-white max-h-[750px]  rounded-2xl shadow-lg overflow-hidden flex w-full max-w-[1200px] min-w-[900px]"
               style={{ height: "calc(100vh - 160px)" }}
             >
-              <div className="flex h-full">
-                {/* Content Area */}
-                <div className="flex-1 p-8 overflow-auto">
-                  <Outlet />
-                </div>
-                {/* Sidebar */}
-                <div className="w-80 bg-gradient-to-br from-slate-800 via-slate-700 to-slate-900 relative">
-                  <div className="relative h-full flex flex-col">
-                    {/* Top Section */}
-                    <div className="flex-1 flex flex-col justify-center items-center p-6">
-                      <div className="text-center">
-                        <div className="mb-8 flex justify-center">
-                          <div className="w-48 h-48 flex items-center justify-center">
-                            <SvgLanding />
-                          </div>
-                        </div>
-                        <div className="space-y-3">
-                          <h3 className="text-white text-xl font-semibold">
-                            www.136.ir
-                          </h3>
-                          <p className="text-slate-300 text-sm leading-relaxed">
-                            پورتال خدمات الکترونیک
-                          </p>
+              <div className="flex-1 p-8 overflow-auto">
+                <Outlet />
+              </div>
+              {/* Sidebar */}
+              <div className="w-80 bg-gradient-to-br from-slate-800 via-slate-700 to-slate-900 relative">
+                <div className="relative h-full flex flex-col">
+                  {/* Top Section */}
+                  <div className="flex-1 flex flex-col justify-center items-center p-6">
+                    <div className="text-center">
+                      <div className="mb-8 flex justify-center">
+                        <div className="w-48 h-48 flex items-center justify-center">
+                          <SvgLanding />
                         </div>
                       </div>
+                      <div className="space-y-3">
+                        <h3 className="text-white text-xl font-semibold">
+                          www.136.ir
+                        </h3>
+                        <p className="text-slate-300 text-sm leading-relaxed">
+                          پورتال خدمات الکترونیک
+                        </p>
+                      </div>
                     </div>
-                    {/* Bottom Section */}
-                    <div className="p-6 border-t border-white/10">
-                      <ShowDate />
-                    </div>
+                  </div>
+                  {/* Bottom Section */}
+                  <div className="p-6 border-t border-white/10">
+                    <ShowDate />
                   </div>
                 </div>
               </div>

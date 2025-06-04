@@ -1,11 +1,11 @@
 import { lazy, Suspense } from "react";
-import Loading from "../components/commoen/Loading";
 import ReportLayout from "../leyout/ReportLayout";
+import ReportStep1Skeleton from "../components/commoen/Loading/ReportLoading";
 
 const ReportIndex = lazy(() => import("../pages/Report/ReportIndex"));
 
 const Suspenswrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  return <Suspense fallback={<Loading />}>{children}</Suspense>;
+  return <Suspense fallback={<ReportStep1Skeleton />}>{children}</Suspense>;
 };
 
 const ReportRoutes = {

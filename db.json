@@ -15,7 +15,7 @@
       "icon": "database",
       "img": "https://136.bazresi.ir/dargah/assets/logos/BB.png",
 
-      "link": "dargah/dashboard2/report"
+      "link": "/dargah/dashboard2/report"
     },
     {
       "id": 3,

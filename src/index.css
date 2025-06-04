@@ -13,3 +13,20 @@
 }
 
 
+.shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.shimmer::after {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(110deg, transparent 30%, rgba(255,255,255,0.4) 50%, transparent 70%);
+  transform: translateX(-100%);
+  animation: shimmer-move 1.5s infinite;
+}
+@keyframes shimmer-move {
+  100% {
+    transform: translateX(100%);
+  }
+}

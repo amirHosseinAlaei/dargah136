@@ -1,14 +1,18 @@
 import { lazy, Suspense } from "react";
 import LoginLayout from "../leyout/AuthLayout";
-import Loading from "../components/commoen/Loading";
-import Register from "../pages/authentication/Register";
-import Forget from "../pages/authentication/Forget";
-import ChangeNumber from "../pages/authentication/ChangeNumber";
+import LoginSkeleton from "../components/commoen/Loading/LoginSkeleton";
+import RegisterSkeleton from "../components/commoen/Loading/RegisterSkeleton";
+import ForgetSkeleton from "../components/commoen/Loading/ForgetAndChange";
 const Login = lazy(() => import("../pages/authentication/Login"));
-const Suspenswrapper: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
-  return <Suspense fallback={<Loading />}>{children}</Suspense>;
+const Register = lazy(() => import("../pages/authentication/Register"));
+const Forget = lazy(() => import("../pages/authentication/Forget"));
+const ChangeNumber = lazy(() => import("../pages/authentication/ChangeNumber"));
+
+const Suspenswrapper: React.FC<{
+  children: React.ReactNode;
+  fallback: React.ReactNode;
+}> = ({ children, fallback }) => {
+  return <Suspense fallback={fallback}>{children}</Suspense>;
 };
 
 const LoginRoutes = {
@@ -18,7 +22,7 @@ const LoginRoutes = {
     {
       path: "/user2/login",
       element: (
-        <Suspenswrapper>
+        <Suspenswrapper fallback={<LoginSkeleton />}>
           <Login />
         </Suspenswrapper>
       ),
@@ -27,7 +31,7 @@ const LoginRoutes = {
     {
       path: "/user2/register",
       element: (
-        <Suspenswrapper>
+        <Suspenswrapper fallback={<RegisterSkeleton />}>
           <Register />
         </Suspenswrapper>
       ),
@@ -36,7 +40,7 @@ const LoginRoutes = {
     {
       path: "/user2/forget",
       element: (
-        <Suspenswrapper>
+        <Suspenswrapper fallback={<ForgetSkeleton />}>
           <Forget />
         </Suspenswrapper>
       ),
@@ -44,9 +48,11 @@ const LoginRoutes = {
 
     {
       path: "/user2/changeNumber",
-      element: <Suspenswrapper>
-        <ChangeNumber/>
-      </Suspenswrapper>,
+      element: (
+        <Suspenswrapper fallback={<ForgetSkeleton />}>
+          <ChangeNumber />
+        </Suspenswrapper>
+      ),
     },
   ],
 };

@@ -1,11 +1,11 @@
 import { lazy, Suspense } from "react";
-import Loading from "../components/commoen/Loading";
 import FollowUpLayout from "../leyout/FollowUpLayout";
+import FollowUpIndexSkeleton from "../components/commoen/Loading/FllowUp";
 
 const FollowUpIndex = lazy(() => import("../pages/followUp/followUpIndex"));
 
 const Suspenswrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  return <Suspense fallback={<Loading />}>{children}</Suspense>;
+  return <Suspense fallback={<FollowUpIndexSkeleton />}>{children}</Suspense>;
 };
 
 const FollowUpRoutes = {
