@@ -107,17 +107,29 @@ const LoadingState: React.FC = () => (
 
 // UI: Error state
 const ErrorState: React.FC<{ errorMessage?: string; onRetry: () => void }> = ({
+  errorMessage,
   onRetry,
 }) => (
   <div className="text-center py-12">
-    <h3 className="text-lg font-semibold text-red-800 mb-2">خطا در بارگذاری</h3>
-    <button
-      onClick={onRetry}
-      className="px-4 py-2 rounded-lg bg-red-600 text-white text-sm hover:bg-red-700 transition"
-      type="button"
-    >
-      تلاش مجدد
-    </button>
+    <div className="p-6 max-w-md mx-auto">
+      <Icon
+        icon="mdi:alert-circle"
+        className="text-red-500 text-4xl mx-auto mb-4"
+      />
+      <h3 className="text-lg font-semibold text-red-800 mb-2">
+        خطا در بارگذاری
+      </h3>
+      <p className="text-red-600 mb-4">
+        {errorMessage || "مشکلی در دریافت اطلاعات به وجود آمده"}
+      </p>
+      <button
+        onClick={onRetry}
+        className="px-4 py-2 rounded-lg bg-red-600 text-white text-sm hover:bg-red-700 transition"
+        type="button"
+      >
+        تلاش مجدد
+      </button>
+    </div>
   </div>
 );
 

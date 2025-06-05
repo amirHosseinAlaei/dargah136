@@ -685,16 +685,15 @@ function ReportIndex() {
               )}
             </Form.Item>
 
-       {filePreview && (
-  <div className="mb-4 flex justify-center">
-    <Image
-      src={filePreview}
-      alt="پیش نمایش فایل"
-      style={{ maxHeight: 100 }}
-    />
-  </div>
-)}
-
+            {filePreview && (
+              <div className="mb-4 flex justify-center">
+                <Image
+                  src={filePreview}
+                  alt="پیش نمایش فایل"
+                  style={{ maxHeight: 100 }}
+                />
+              </div>
+            )}
 
             <Form.Item
               className=" "

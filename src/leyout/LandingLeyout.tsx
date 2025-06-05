@@ -29,7 +29,7 @@ const ACTIONS: Action[] = [
     label: "ورود به حساب",
     icon: "mdi:login",
     colorClass:
-      "!bg-slate-600 hover:!bg-slate-700 lg:!bg-sky-800 lg:hover:!bg-sky-900",
+      "!bg-slate-600  hover:!bg-slate-700 lg:!bg-sky-800 lg:hover:!bg-sky-900",
     path: "/user2/login",
     ariaLabel: "ورود به حساب",
   },
@@ -48,7 +48,7 @@ const DashboardLayout: React.FC = () => {
     <Button
       key={label}
       type="text"
-      className={`${colorClass} !text-white !border-0 !rounded-lg !px-6 !py-3.5 !h-auto !font-medium !transition-all !duration-200 !shadow-sm flex items-center gap-2`}
+      className={`${colorClass} !text-white !border-0 !rounded-lg !px-3 !py-5.5 !h-auto  !max-h-[14px] !font-medium !transition-all !duration-200 !shadow-sm flex items-center gap-2`}
       onClick={() => {
         setMobileMenuOpen(false);
         navigate(path);
@@ -74,15 +74,15 @@ const DashboardLayout: React.FC = () => {
                   alt="لوگو سازمان بازرسی"
                 />
               </div>
-              <div className="hidden md:block">
-                <h1 className="text-slate-800 font-semibold text-lg">
-                  درگاه سامانه‌های یکپارچه
-                </h1>
-                <p className="text-slate-600 text-sm">سازمان بازرسی کل کشور</p>
+
+              <div className="   ">
+                <p className="flex gap-1  font-bold text-lg text-slate-800 ">
+                  درگاه سامانه‌های یکپارچه <span className=" px-0.5 hidden lg:block ">سازمان بازرسی کل کشور</span>
+                </p>
               </div>
             </div>
             {/* Desktop Actions */}
-            <div className="hidden lg:flex items-center gap-3">
+            <div className="hidden lg:flex items-center  gap-3">
               {ACTIONS.map(renderActionButton)}
             </div>
             {/* Mobile Menu */}
@@ -93,7 +93,7 @@ const DashboardLayout: React.FC = () => {
                   items: ACTIONS.map((action) => ({
                     key: action.key,
                     label: renderActionButton(action),
-                    className: "  !flex justify-center items-center ",
+                    className: "   hidden !flex justify-center items-center  ",
                   })),
                 }}
                 trigger={["click"]}

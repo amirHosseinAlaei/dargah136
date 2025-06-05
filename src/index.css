@@ -1,17 +1,9 @@
 @import "../public/assets/fonts/fontFace.css";
 @import "tailwindcss";
 
-
-
-
-
-
-
-
 * {
   font-family: "IRANYekanXFaNum";
 }
-
 
 .shimmer {
   position: relative;
@@ -20,8 +12,16 @@
 .shimmer::after {
   content: "";
   position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: linear-gradient(110deg, transparent 30%, rgba(255,255,255,0.4) 50%, transparent 70%);
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    110deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.4) 50%,
+    transparent 70%
+  );
   transform: translateX(-100%);
   animation: shimmer-move 1.5s infinite;
 }
@@ -30,3 +30,13 @@
     transform: translateX(100%);
   }
 }
+
+
+
+.accessibility-widget, .accessibility-widget * {
+  font-size: 16px !important;
+  font-weight: normal !important;
+  font-family: inherit !important;
+  direction: rtl;
+}
+
