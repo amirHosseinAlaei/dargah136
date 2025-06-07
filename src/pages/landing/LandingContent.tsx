@@ -198,14 +198,20 @@ const LandingContent: React.FC = () => {
     setViewMode((prev) => (prev + 1) % viewModeCount);
   }, [viewModeCount]);
 
-  // مسیر‌یابی با شرایط خاص
+  // مسیر‌یابی با شرایط خاص (اصلاح‌شده)
   const handleCardClick = useCallback(
     (link: string, id?: string | number) => {
-      if (id === 5) {
+      if (id === 1 || id === 3 || id === 4) {
+        // باز کردن لینک در تب جدید
+        window.open(link, "_blank");
+      } else if (id === 5) {
+        // تماس تلفنی
         window.location.href = "tel:136";
       } else if (id === 2) {
+        // مسیر داخلی با navigate
         navigate("/dargah/dashboard2/report");
       } else {
+        // مسیر داخلی عادی
         navigate(link);
       }
     },

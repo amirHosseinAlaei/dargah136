@@ -5,7 +5,8 @@
       "title": "ثبت شکایات فساد",
       "description": "شکایات  و گزارش  های فساد ",
       "icon": "phone",
-      "link": "/contact-136",
+      "link": "https://136.bazresi.ir/dargah/user2/login?next=aHR0cHM6Ly8xMzYuYmF6cmVzaS5pci9icG1zL2FwcC9kYXNoYm9hcmQ%2FY29kZT1BcHAmbmFtZT0lRDglQjElRDglQjMlREIlOEMlRDglQUYlREElQUYlREIlOEMlMjAlRDglQTglRDklODclMjAlRDglQjQlREElQTklRDglQTclREIlOEMlRDglQTclRDglQUElMjAlRDklODUlRDglQjElRDglQUYlRDklODUlREIlOEMlMjAlRDglQTclRDglQjIlMjAlRDglQUYlRDglQjMlRDglQUElREElQUYlRDglQTclRDklODclMjAlRDklODclRDglQTclREIlOEMlMjAlRDglQTclRDglQUMlRDglQjElRDglQTclREIlOEMlREIlOEMlMjAlMjgxMzYlMjk%3D",
+
       "img": "https://136.bazresi.ir/dargah/assets/logos/28d054cb-ab5b-42c9-092b-08dad160ceb1.png"
     },
     {
@@ -22,7 +23,7 @@
       "title": "پایگاه اطلاع‌رسانی",
       "description": "پایگاه اطلاع رسانی سازمان",
       "icon": "info",
-      "link": "/news",
+      "link": "https://bazresi.ir/",
       "img": "https://136.bazresi.ir/dargah/assets/logos/94d76394-8a25-4488-d8b1-08dada85fba1.png"
     },
     {
@@ -30,7 +31,7 @@
       "title": "دسترسی آزاد به اطلاعات",
       "description": "سامانه ملی انتشار و دسترسی آژاد به اطلاعات ",
       "icon": "report",
-      "link": "/anonymous-report",
+      "link": "https://iranfoia.ir/home/",
       "img": "https://136.bazresi.ir/dargah/assets/logos/7e3f8ef2-1120-4341-d8af-08dada85fba1.png"
     },
     {

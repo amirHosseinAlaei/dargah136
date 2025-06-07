@@ -168,7 +168,6 @@ const AccessibilityWidget = () => {
       className="accessibility-widget"
       onMouseDown={onMouseDown}
       style={{
-        
         position: "fixed",
         left: position.x,
         top: position.y,
@@ -185,10 +184,11 @@ const AccessibilityWidget = () => {
           : "left 0.3s, right 0.3s, box-shadow 0.2s, top 0.3s",
       }}
     >
-      <div className=" rounded-t-lg "
+      <div
+        className=" rounded-t-lg "
         style={{
           width: "100%",
-          height:36,
+          height: 36,
           background: "#f0f0f0",
           display: "flex",
           alignItems: "center",

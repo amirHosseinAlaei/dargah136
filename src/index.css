@@ -1,42 +1,90 @@
 @import "../public/assets/fonts/fontFace.css";
 @import "tailwindcss";
 
+/* تنظیمات پایه */
 * {
   font-family: "IRANYekanXFaNum";
+  font-size: inherit;
 }
 
+/* پایه بر روی body */
+body {
+  font-size: 16px !important;
+  direction: rtl !important;
+  line-height: 1.5;
+  transition: font-size 0.3s ease, font-weight 0.3s ease;
+}
+
+/* المان‌های ant-design */
+body,
+.ant-btn,
+.ant-btn *,
+.ant-input,
+.ant-input *,
+.ant-select-selector,
+.ant-select-selector *,
+.ant-form-item,
+.ant-form-item *,
+.ant-radio-inner,
+.ant-radio-inner *,
+.ant-checkbox-inner,
+.ant-checkbox-inner *,
+.ant-form-item-label,
+.ant-form-item-label * {
+  font-size: inherit !important;
+}
+
+/* لیبل فرم */
+.ant-form-item-label > label {
+  font-size: 14px !important;
+  direction: rtl !important;
+}
+
+/* المان‌های متنی */
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+span,
+a,
+li {
+  font-size: inherit;
+  font-family: inherit;
+}
+
+/* فرم و دکمه‌ها */
+input,
+textarea,
+select,
+button,
+label {
+  font-size: inherit !important;
+  direction: rtl !important;
+  outline: none;
+}
+
+/* ویجت دسترسی */
+.accessibility-widget,
+.accessibility-widget * {
+  font-family: inherit !important;
+  font-size: 16px !important;
+  font-weight: normal !important;
+  direction: rtl !important;
+}
+
+/* دکمه ویجت */
+.accessibility-widget button {
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  cursor: pointer !important;
+}
+
+/* افکت شیمیر */
 .shimmer {
   position: relative;
   overflow: hidden;
 }
-.shimmer::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(
-    110deg,
-    transparent 30%,
-    rgba(255, 255, 255, 0.4) 50%,
-    transparent 70%
-  );
-  transform: translateX(-100%);
-  animation: shimmer-move 1.5s infinite;
-}
-@keyframes shimmer-move {
-  100% {
-    transform: translateX(100%);
-  }
-}
-
-
-
-.accessibility-widget, .accessibility-widget * {
-  font-size: 16px !important;
-  font-weight: normal !important;
-  font-family: inherit !important;
-  direction: rtl;
-}
-
