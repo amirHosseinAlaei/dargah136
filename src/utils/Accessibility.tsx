@@ -7,26 +7,97 @@ const WIDGET_WIDTH = 60;
 const WIDGET_HEIGHT = 120;
 const FONT_WEIGHTS = [300, 400, 500, 600, 700, 800, 900];
 
+// کلیدهای ذخیره در sessionStorage
+const STORAGE_KEYS = {
+  position: "accessibilityWidgetPosition",
+  fontSize: "accessibilityWidgetFontSize",
+  fontWeight: "accessibilityWidgetFontWeight",
+};
+
 const AccessibilityWidget = () => {
-  const [position, setPosition] = useState({
-    x: 0,
-    y: window.innerHeight / 2 - WIDGET_HEIGHT / 2,
-  });
-  const [side, setSide] = useState("left");
+  // بارگذاری موقعیت اولیه از sessionStorage یا مقدار پیشفرض
+  const getInitialPosition = () => {
+    const saved = sessionStorage.getItem(STORAGE_KEYS.position);
+    if (saved) {
+      try {
+        const pos = JSON.parse(saved);
+        // اعتبارسنجی مختصات
+        if (
+          typeof pos.x === "number" &&
+          typeof pos.y === "number" &&
+          pos.x >= 0 &&
+          pos.y >= 0
+        ) {
+          return pos;
+        }
+      } catch {}
+    }
+    return {
+      x: 0,
+      y: window.innerHeight / 2 - WIDGET_HEIGHT / 2,
+    };
+  };
+
+  const [position, setPosition] = useState(getInitialPosition);
+  const [side, setSide] = useState(() =>
+    position.x < window.innerWidth / 2 ? "left" : "right"
+  );
   const [dragging, setDragging] = useState(false);
   const [rel, setRel] = useState({ x: 0, y: 0 });
   const widgetRef = useRef(null);
 
-  const [fontSize, setFontSize] = useState(16);
-  const [fontWeight, setFontWeight] = useState(400);
+  // بارگذاری اندازه فونت از sessionStorage یا مقدار پیشفرض
+  const getInitialFontSize = () => {
+    const saved = sessionStorage.getItem(STORAGE_KEYS.fontSize);
+    if (saved) {
+      const val = Number(saved);
+      if (!isNaN(val)) return val;
+    }
+    return 16;
+  };
 
+  const [fontSize, setFontSize] = useState(getInitialFontSize);
+
+  // بارگذاری وزن فونت از sessionStorage یا مقدار پیشفرض
+  const getInitialFontWeight = () => {
+    const saved = sessionStorage.getItem(STORAGE_KEYS.fontWeight);
+    if (saved) {
+      const val = Number(saved);
+      if (FONT_WEIGHTS.includes(val)) return val;
+    }
+    return 400;
+  };
+
+  const [fontWeight, setFontWeight] = useState(getInitialFontWeight);
+
+  // ذخیره موقعیت در sessionStorage هنگام تغییر
   useEffect(() => {
-    document.body.style.setProperty("font-weight", fontWeight, "important");
+    sessionStorage.setItem(STORAGE_KEYS.position, JSON.stringify(position));
+  }, [position]);
+
+  // ذخیره اندازه فونت در sessionStorage هنگام تغییر
+  useEffect(() => {
+    sessionStorage.setItem(STORAGE_KEYS.fontSize, fontSize.toString());
+  }, [fontSize]);
+
+  // ذخیره وزن فونت در sessionStorage هنگام تغییر
+  useEffect(() => {
+    sessionStorage.setItem(STORAGE_KEYS.fontWeight, fontWeight.toString());
+  }, [fontWeight]);
+
+  // ست کردن استایل وزن فونت روی body
+  useEffect(() => {
+    document.body.style.setProperty(
+      "font-weight",
+      fontWeight.toString(),
+      "important"
+    );
     return () => {
       document.body.style.removeProperty("font-weight");
     };
   }, [fontWeight]);
 
+  // ست کردن اندازه فونت روی body و همه عناصر (به جز خود ویجت)
   useEffect(() => {
     document.body.style.setProperty("font-size", fontSize + "px", "important");
 
