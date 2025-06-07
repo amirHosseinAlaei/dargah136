@@ -17,34 +17,33 @@ const AccessibilityWidget = () => {
   const [rel, setRel] = useState({ x: 0, y: 0 });
   const widgetRef = useRef(null);
 
-  const [fontSize, setFontSize] = useState(16);
-  const [fontWeight, setFontWeight] = useState(400);
+  // خواندن مقادیر از localStorage یا مقدار پیش فرض
+  const [fontSize, setFontSize] = useState(() => {
+    const saved = localStorage.getItem("fontSize");
+    return saved ? parseInt(saved, 10) : 16;
+  });
 
+  const [fontWeight, setFontWeight] = useState(() => {
+    const saved = localStorage.getItem("fontWeight");
+    return saved ? parseInt(saved, 10) : 400;
+  });
+
+  // ذخیره و اعمال وزن فونت به body با !important
   useEffect(() => {
+    localStorage.setItem("fontWeight", fontWeight);
     document.body.style.setProperty("font-weight", fontWeight, "important");
     return () => {
       document.body.style.removeProperty("font-weight");
     };
   }, [fontWeight]);
 
+  // ذخیره و اعمال اندازه فونت به body با !important
   useEffect(() => {
+    localStorage.setItem("fontSize", fontSize);
     document.body.style.setProperty("font-size", fontSize + "px", "important");
-
-    const widget = widgetRef.current;
-    const allElements = Array.from(document.body.querySelectorAll("*"));
-    allElements.forEach((el) => {
-      if (!widget || !widget.contains(el)) {
-        el.style.setProperty("font-size", fontSize + "px", "important");
-      }
-    });
 
     return () => {
       document.body.style.removeProperty("font-size");
-      allElements.forEach((el) => {
-        if (!widget || !widget.contains(el)) {
-          el.style.removeProperty("font-size");
-        }
-      });
     };
   }, [fontSize]);
 
@@ -168,7 +167,6 @@ const AccessibilityWidget = () => {
       className="accessibility-widget"
       onMouseDown={onMouseDown}
       style={{
-        
         position: "fixed",
         left: position.x,
         top: position.y,
@@ -185,10 +183,11 @@ const AccessibilityWidget = () => {
           : "left 0.3s, right 0.3s, box-shadow 0.2s, top 0.3s",
       }}
     >
-      <div className=" rounded-t-lg "
+      <div
+        className="rounded-t-lg"
         style={{
           width: "100%",
-          height:36,
+          height: 36,
           background: "#f0f0f0",
           display: "flex",
           alignItems: "center",
@@ -213,7 +212,7 @@ const AccessibilityWidget = () => {
           <button
             type="button"
             aria-label="دسترسی ویژه"
-            className=" w-full  h-full"
+            className="w-full h-full"
             style={{
               alignItems: "center",
               justifyContent: "center",
@@ -223,7 +222,7 @@ const AccessibilityWidget = () => {
             }}
           >
             <Icon
-              className="w-full "
+              className="w-full"
               icon="ph:magic-wand"
               color="#3b82f6"
               height="32"

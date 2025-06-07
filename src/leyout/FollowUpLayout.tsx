@@ -14,6 +14,7 @@ function FollowUpLayout() {
   return (
     <Layout className="h-screen font-sans !bg-gray-100">
     
+    
     <header className="bg-white shadow-md px-4 lg:px-8 py-4 flex items-center justify-between">
 
         <div  className="flex  items-center justify-center gap-3">

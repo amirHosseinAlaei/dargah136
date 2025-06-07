@@ -1,10 +1,60 @@
 @import "../public/assets/fonts/fontFace.css";
 @import "tailwindcss";
 
-* {
-  font-family: "IRANYekanXFaNum";
+/* تنظیمات پایه روی body و آنت دیزاین */
+body,
+.ant-btn,
+.ant-btn *,
+.ant-input,
+.ant-input *,
+.ant-select-selector,
+.ant-select-selector *,
+.ant-form-item,
+.ant-form-item *,
+.ant-radio-inner,
+.ant-radio-inner *,
+.ant-checkbox-inner,
+.ant-checkbox-inner *,
+.ant-form-item-label,
+.ant-form-item-label * {
+  font-size: inherit !important; /* به inherit تغییر کرد */
 }
 
+/* تنظیم اندازه و استایل لیبل فرم */
+.ant-form-item-label > label {
+  font-size: 14px !important;
+  direction: rtl !important;
+}
+
+/* وراثت فونت و اندازه در المان‌های متنی */
+p, h1, h2, h3, h4, h5, h6, span, a, li {
+  font-size: inherit;
+  font-family: inherit;
+}
+
+/* ورودی‌ها و دکمه‌ها */
+input, textarea, select, button, label {
+  font-size: inherit !important;
+  direction: rtl !important;
+  outline: none;
+}
+
+/* استایل ویجت دسترسی */
+.accessibility-widget, .accessibility-widget * {
+  font-family: inherit !important;
+  font-size: 16px !important;
+  direction: rtl !important;
+}
+
+/* دکمه داخل ویجت */
+.accessibility-widget button {
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  cursor: pointer !important;
+}
+
+/* افکت شیمیر */
 .shimmer {
   position: relative;
   overflow: hidden;
@@ -31,12 +81,10 @@
   }
 }
 
-
-
-.accessibility-widget, .accessibility-widget * {
-  font-size: 16px !important;
-  font-weight: normal !important;
-  font-family: inherit !important;
-  direction: rtl;
+/* تنظیمات پایه روی body */
+body {
+  font-size: 16px !important; /* اندازه پایه فونت */
+  direction: rtl !important;
+  line-height: 1.5;
+  transition: font-size 0.3s ease, font-weight 0.3s ease;
 }
-

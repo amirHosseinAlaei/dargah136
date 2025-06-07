@@ -272,10 +272,7 @@ function ReportIndex() {
       </div>
       <br />
 
-      <h2 className="font-black text-slate-700 lg:text-2xl mb-6 text-center">
-        فرم گزارش فساد
-      </h2>
-
+   
       <Form
         form={form}
         layout="vertical"

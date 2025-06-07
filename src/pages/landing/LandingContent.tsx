@@ -13,20 +13,27 @@ export interface CardItemType {
   link: string;
 }
 
-// Hook: Detect mobile screen
-function useIsMobile(): boolean {
-  const [isMobile, setIsMobile] = useState(
-    typeof window === "undefined" ? false : window.innerWidth < 640
+// Hook: Detect breakpoints (based on Tailwind default breakpoints)
+function useBreakpoint() {
+  const [width, setWidth] = useState(
+    typeof window !== "undefined" ? window.innerWidth : 0
   );
+
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 640);
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    function onResize() {
+      setWidth(window.innerWidth);
+    }
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
   }, []);
-  return isMobile;
+
+  return {
+    isLgUp: width >= 1024, // Tailwind lg breakpoint
+    isMobile: width < 640, // Tailwind sm breakpoint
+  };
 }
 
-// Card: Single service card (list/grid)
+// Card component (ServiceCard)
 const ServiceCard: React.FC<{
   item: CardItemType;
   index?: number;
@@ -147,7 +154,7 @@ const EmptyState: React.FC = () => (
 // Main Component
 const LandingContent: React.FC = () => {
   const navigate = useNavigate();
-  const isMobile = useIsMobile();
+  const { isLgUp, isMobile } = useBreakpoint();
 
   const {
     data: serviceList,
@@ -161,6 +168,15 @@ const LandingContent: React.FC = () => {
     staleTime: 5 * 60 * 1000,
     retry: 2,
   });
+
+  // فیلتر کردن داده‌ها: اگر دسکتاپ هستیم، آیتم id=5 حذف شود
+  const filteredServiceList = useMemo(() => {
+    if (!serviceList) return [];
+    if (isLgUp) {
+      return serviceList.filter((service) => service.id !== 5);
+    }
+    return serviceList;
+  }, [serviceList, isLgUp]);
 
   // حالت نمایش: grid یا list
   const [viewMode, setViewMode] = useState<number>(0);
@@ -210,11 +226,10 @@ const LandingContent: React.FC = () => {
     return "grid grid-cols-1 sm:grid-cols-2 gap-4 items-start";
   }, [isMobile, viewMode, isListView]);
 
-  // وضعیت‌های مختلف
   if (isLoading) return <LoadingState />;
   if (isError)
     return <ErrorState errorMessage={error?.message} onRetry={refetch} />;
-  if (!serviceList || serviceList.length === 0) return <EmptyState />;
+  if (!filteredServiceList || filteredServiceList.length === 0) return <EmptyState />;
 
   return (
     <div className="w-full min-h-screen px-2 sm:px-4 md:px-6 py-4">
@@ -222,7 +237,7 @@ const LandingContent: React.FC = () => {
         {/* Header */}
         <div className="mb-6 flex items-center justify-between">
           <h1 className="text-xl sm:text-2xl font-bold text-gray-800">
-            خدمات ({serviceList.length})
+            خدمات ({filteredServiceList.length})
           </h1>
           <button
             onClick={handleToggleViewMode}
@@ -239,24 +254,19 @@ const LandingContent: React.FC = () => {
 
         {/* Services List/Grid */}
         <div className={layoutClass}>
-          {serviceList.map((service, idx) => {
-            // کارت با id=5 فقط روی موبایل دیده شود
-            const mobileOnly = service.id === 5 ? "block lg:hidden" : "";
-            return (
-              <React.Fragment key={service.id}>
-                <ServiceCard
-                  item={service}
-                  index={isListView ? idx : undefined}
-                  isListView={isListView}
-                  className={mobileOnly}
-                  onClick={() => handleCardClick(service.link, service.id)}
-                />
-                {isListView && idx !== serviceList.length - 1 && (
-                  <div className="border-b border-dashed border-gray-200 mx-4" />
-                )}
-              </React.Fragment>
-            );
-          })}
+          {filteredServiceList.map((service, idx) => (
+            <React.Fragment key={service.id}>
+              <ServiceCard
+                item={service}
+                index={isListView ? idx : undefined}
+                isListView={isListView}
+                onClick={() => handleCardClick(service.link, service.id)}
+              />
+              {isListView && idx !== filteredServiceList.length - 1 && (
+                <div className="border-b border-dashed border-gray-200 mx-4" />
+              )}
+            </React.Fragment>
+          ))}
         </div>
       </div>
     </div>

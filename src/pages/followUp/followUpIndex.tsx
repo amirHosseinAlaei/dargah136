@@ -19,6 +19,8 @@ function FollowUpIndex() {
 
   return (
     <div
+
+    
       className="max-w-md w-full mx-auto p-6 bg-white rounded-2xl shadow-md"
       style={{ maxHeight: "80vh", overflowY: "auto" }}
     >
