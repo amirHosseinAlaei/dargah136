@@ -1,13 +1,11 @@
 @import "../public/assets/fonts/fontFace.css";
 @import "tailwindcss";
 
-/* تنظیمات پایه */
 * {
   font-family: "IRANYekanXFaNum";
   font-size: inherit;
 }
 
-/* پایه بر روی body */
 body {
   font-size: 16px !important;
   direction: rtl !important;
@@ -15,7 +13,6 @@ body {
   transition: font-size 0.3s ease, font-weight 0.3s ease;
 }
 
-/* المان‌های ant-design */
 body,
 .ant-btn,
 .ant-btn *,
@@ -34,13 +31,11 @@ body,
   font-size: inherit !important;
 }
 
-/* لیبل فرم */
 .ant-form-item-label > label {
   font-size: 14px !important;
   direction: rtl !important;
 }
 
-/* المان‌های متنی */
 p,
 h1,
 h2,
@@ -55,7 +50,6 @@ li {
   font-family: inherit;
 }
 
-/* فرم و دکمه‌ها */
 input,
 textarea,
 select,
@@ -66,7 +60,6 @@ label {
   outline: none;
 }
 
-/* ویجت دسترسی */
 .accessibility-widget,
 .accessibility-widget * {
   font-family: inherit !important;
@@ -75,7 +68,6 @@ label {
   direction: rtl !important;
 }
 
-/* دکمه ویجت */
 .accessibility-widget button {
   background: transparent !important;
   border: none !important;
@@ -83,7 +75,6 @@ label {
   cursor: pointer !important;
 }
 
-/* افکت شیمیر */
 .shimmer {
   position: relative;
   overflow: hidden;

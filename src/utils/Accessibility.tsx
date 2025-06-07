@@ -39,9 +39,7 @@ const AccessibilityWidget = () => {
   };
 
   const [position, setPosition] = useState(getInitialPosition);
-  const [side, setSide] = useState(() =>
-    position.x < window.innerWidth / 2 ? "left" : "right"
-  );
+  const [side, setSide] = useState(() => (position.x < window.innerWidth / 2 ? "left" : "right"));
   const [dragging, setDragging] = useState(false);
   const [rel, setRel] = useState({ x: 0, y: 0 });
   const widgetRef = useRef(null);
@@ -87,11 +85,7 @@ const AccessibilityWidget = () => {
 
   // ست کردن استایل وزن فونت روی body
   useEffect(() => {
-    document.body.style.setProperty(
-      "font-weight",
-      fontWeight.toString(),
-      "important"
-    );
+    document.body.style.setProperty("font-weight", fontWeight.toString(), "important");
     return () => {
       document.body.style.removeProperty("font-weight");
     };

@@ -272,7 +272,6 @@ function ReportIndex() {
       </div>
       <br />
 
-   
       <Form
         form={form}
         layout="vertical"
